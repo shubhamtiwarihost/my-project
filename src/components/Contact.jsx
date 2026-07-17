@@ -129,7 +129,7 @@ export default function Contact() {
                   Typically responds within 24 hours
                 </div>
                 <p style={{ fontSize: '0.82rem', color: '#64748b', margin: 0, lineHeight: 1.6 }}>
-                  Open to leadership roles and complex PHP/WordPress/API delivery engagements. Clear communication guaranteed.
+                  Open to leadership roles and complex PHP/WordPress/API delivery engagements.
                 </p>
               </div>
 
