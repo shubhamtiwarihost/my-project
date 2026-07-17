@@ -112,7 +112,7 @@ export default function Projects() {
             }}>
               Projects
             </div>
-            <h2 className="section-title">Real SaaS, internal systems & WordPress builds</h2>
+            <h2 className="section-title">Real SaaS, internal systems</h2>
             <p className="section-subtitle" style={{ maxWidth: '44rem' }}>
               Delivered end-to-end with client coordination and production support. Each project reflects full ownership — from planning to post-launch.
             </p>
