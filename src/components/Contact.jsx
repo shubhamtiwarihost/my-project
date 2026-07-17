@@ -105,8 +105,8 @@ export default function Contact() {
             }}>
               Contact
             </div>
-            <h2 className="section-title">Let's discuss delivery, integrations, and enterprise-grade execution.</h2>
-            <p className="section-subtitle" style={{ maxWidth: '44rem' }}>
+            <h2 className="section-title">Let's discuss delivery,integrations, and enterprise-grade execution.</h2>
+            <p className="section-subtitle" style={{ maxWidth: '44rem' }}>shubham
               Reach out directly via email, phone, or LinkedIn — fast response, clear communication. Open to leadership roles and complex PHP/WordPress/API delivery engagements.
             </p>
           </div>
