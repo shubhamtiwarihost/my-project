@@ -163,7 +163,7 @@ export default function Hero() {
             View Projects
           </a>
           <a
-            href="https://linkedin.com/in/Shubham Tiwari-chawla-818298a1"
+            href="https://linkedin.com/in/ShubhamTiwari-818298a1"
             target="_blank"
             rel="noopener noreferrer"
             className="btn-secondary"

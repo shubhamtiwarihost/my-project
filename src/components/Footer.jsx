@@ -24,7 +24,7 @@ export default function Footer() {
               fontSize: '0.75rem', fontWeight: 700, color: '#fff', letterSpacing: '-0.01em',
             }}>MC</div>
             <div>
-              <div style={{ fontSize: '0.875rem', fontWeight: 600, color: '#f1f5f9' }}>Shubham Tiwari Chawla</div>
+              <div style={{ fontSize: '0.875rem', fontWeight: 600, color: '#f1f5f9' }}>Shubham Tiwari</div>
               <div style={{ fontSize: '0.72rem', color: '#64748b' }}>Senior Full-stack PHP Developer</div>
             </div>
           </div>
