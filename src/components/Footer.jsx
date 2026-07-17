@@ -107,7 +107,7 @@ export default function Footer() {
           gap: '1rem',
         }}>
           <p style={{ fontSize: '0.78rem', color: '#334155', margin: 0 }}>
-            © {year} Shubham Tiwari. All rights reserved.
+            © {year} Shubham Tiwari.All rights reserved.
           </p>
           <p style={{ fontSize: '0.78rem', color: '#334155', margin: 0 }}>
             Senior Full-stack PHP Developer & Technical Lead
