@@ -99,7 +99,7 @@ export default function Hero() {
           margin: '0 auto 0.75rem',
           textWrap: 'balance',
         }}>
-          10+ years of hands-on full-stack PHP development across product and services environments.
+         shubham dev 10+ years of hands-on full-stack PHP development across product and services environments.
           Building scalable enterprise applications, SaaS platforms, and WordPress solutions.
         </p>
 
