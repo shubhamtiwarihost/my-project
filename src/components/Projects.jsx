@@ -114,7 +114,7 @@ export default function Projects() {
             </div>
             <h2 className="section-title">Real SaaS</h2>
             <p className="section-subtitle" style={{ maxWidth: '44rem' }}>
-               with client coordination and production support. Each project reflects full ownership — from planning to post-launch.
+                and production support. Each project reflects full ownership — from planning to post-launch.
             </p>
           </div>
 
