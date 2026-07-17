@@ -62,7 +62,7 @@ export default function Navbar() {
                 letterSpacing: '-0.02em',
               }}>MC</div>
               <span style={{ fontSize: '0.95rem', fontWeight: 600, color: '#f1f5f9', letterSpacing: '-0.01em' }}>
-                Shubham Tiwari Chawla
+                Shubham Tiwari 
               </span>
             </div>
           </a>

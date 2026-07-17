@@ -72,7 +72,7 @@ export default function Hero() {
           color: '#f1f5f9',
           margin: '0 0 1rem',
         }}>
-          Shubham Tiwari Chawla
+          Shubham Tiwari 
         </h1>
 
         {/* Gradient role */}
