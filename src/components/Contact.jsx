@@ -22,8 +22,8 @@ const contactItems = [
       </svg>
     ),
     label: 'Email',
-    value: 'Shubham Tiwari@innovationalidea.com',
-    href: 'mailto:Shubham Tiwari@innovationalidea.com',
+    value: 'ShubhamTiwari@gmail.com',
+    href: 'mailto:ShubhamTiwari@innovationalidea.com',
     color: 'rgba(99,102,241,0.12)',
     border: 'rgba(129,140,248,0.2)',
     iconColor: '#818cf8',
