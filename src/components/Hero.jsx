@@ -72,7 +72,7 @@ export default function Hero() {
           color: '#f1f5f9',
           margin: '0 0 1rem',
         }}>
-          Mohit Chawla
+          Shubham Tiwari Chawla
         </h1>
 
         {/* Gradient role */}
@@ -163,7 +163,7 @@ export default function Hero() {
             View Projects
           </a>
           <a
-            href="https://linkedin.com/in/mohit-chawla-818298a1"
+            href="https://linkedin.com/in/Shubham Tiwari-chawla-818298a1"
             target="_blank"
             rel="noopener noreferrer"
             className="btn-secondary"

@@ -24,7 +24,7 @@ export default function Footer() {
               fontSize: '0.75rem', fontWeight: 700, color: '#fff', letterSpacing: '-0.01em',
             }}>MC</div>
             <div>
-              <div style={{ fontSize: '0.875rem', fontWeight: 600, color: '#f1f5f9' }}>Mohit Chawla</div>
+              <div style={{ fontSize: '0.875rem', fontWeight: 600, color: '#f1f5f9' }}>Shubham Tiwari Chawla</div>
               <div style={{ fontSize: '0.72rem', color: '#64748b' }}>Senior Full-stack PHP Developer</div>
             </div>
           </div>
@@ -53,7 +53,7 @@ export default function Footer() {
           {/* Social */}
           <div style={{ display: 'flex', gap: 10 }}>
             <a
-              href="https://linkedin.com/in/mohit-chawla-818298a1"
+              href="https://linkedin.com/in/Shubham Tiwari-chawla-818298a1"
               target="_blank"
               rel="noopener noreferrer"
               style={{
@@ -74,7 +74,7 @@ export default function Footer() {
               </svg>
             </a>
             <a
-              href="https://github.com/mohit-chawla"
+              href="https://github.com/Shubham Tiwari-chawla"
               target="_blank"
               rel="noopener noreferrer"
               style={{
@@ -107,7 +107,7 @@ export default function Footer() {
           gap: '1rem',
         }}>
           <p style={{ fontSize: '0.78rem', color: '#334155', margin: 0 }}>
-            © {year} Mohit Chawla. All rights reserved.
+            © {year} Shubham Tiwari Chawla. All rights reserved.
           </p>
           <p style={{ fontSize: '0.78rem', color: '#334155', margin: 0 }}>
             Senior Full-stack PHP Developer & Technical Lead
