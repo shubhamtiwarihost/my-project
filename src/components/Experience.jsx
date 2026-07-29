@@ -1,8 +1,9 @@
-import { education, experiences } from '../data/content'
+import { useContent } from '../context/ContentProvider'
 import { useInView } from '../hooks/useInView'
 import { IconCheck } from './Icons'
 
 export default function Experience() {
+  const { experiences, education, experienceCopy } = useContent()
   const [ref, visible] = useInView()
 
   return (
@@ -10,10 +11,8 @@ export default function Experience() {
       <div className={`container reveal ${visible ? 'is-visible' : ''}`} ref={ref}>
         <header className="section-head">
           <p className="eyebrow">Experience</p>
-          <h2 className="section-title">Professional experience</h2>
-          <p className="section-subtitle">
-            Backend and CMS delivery across digital learning, enterprise apps, and production platforms.
-          </p>
+          <h2 className="section-title">{experienceCopy.title}</h2>
+          <p className="section-subtitle">{experienceCopy.subtitle}</p>
         </header>
 
         <div className="experience-list">

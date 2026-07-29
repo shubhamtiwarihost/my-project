@@ -1,9 +1,10 @@
 import { useState } from 'react'
-import { projects, projectsNote } from '../data/content'
+import { useContent } from '../context/ContentProvider'
 import { useInView } from '../hooks/useInView'
 import { IconCheck, IconChevron, IconInfo } from './Icons'
 
 export default function Projects() {
+  const { projects, projectsNote, projectsCopy } = useContent()
   const [ref, visible] = useInView()
   const [expanded, setExpanded] = useState(null)
 
@@ -12,11 +13,8 @@ export default function Projects() {
       <div className={`container reveal ${visible ? 'is-visible' : ''}`} ref={ref}>
         <header className="section-head">
           <p className="eyebrow">Projects</p>
-          <h2 className="section-title">Enterprise backends, CMS & learning platforms</h2>
-          <p className="section-subtitle">
-            Selected platforms spanning banking, corporate CMS, edtech, and real estate — with ownership
-            from architecture through production support.
-          </p>
+          <h2 className="section-title">{projectsCopy.title}</h2>
+          <p className="section-subtitle">{projectsCopy.subtitle}</p>
         </header>
 
         <div className="projects-grid">

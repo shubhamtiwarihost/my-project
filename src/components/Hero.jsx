@@ -1,11 +1,19 @@
 import { useEffect, useRef } from 'react'
-import { profile } from '../data/content'
+import { useContent } from '../context/ContentProvider'
 import { IconLinkedIn, IconMail, IconMonitor } from './Icons'
 
-const heroImage = `${import.meta.env.BASE_URL}hero-bg.jpg`
+const defaultHeroImage = `${import.meta.env.BASE_URL}hero-bg.jpg`
+
+const iconMap = {
+  mail: IconMail,
+  linkedin: IconLinkedIn,
+  monitor: IconMonitor,
+}
 
 export default function Hero() {
+  const { profile, hero } = useContent()
   const ref = useRef(null)
+  const heroImage = hero.backgroundUrl || defaultHeroImage
 
   useEffect(() => {
     const timer = setTimeout(() => {
@@ -13,6 +21,15 @@ export default function Hero() {
     }, 60)
     return () => clearTimeout(timer)
   }, [])
+
+  const ctas =
+    hero.ctas?.length > 0
+      ? hero.ctas
+      : [
+          { label: 'Get In Touch', href: '#contact', iconKey: 'mail', style: 'primary' },
+          { label: 'View Projects', href: '#projects', iconKey: 'monitor', style: 'ghost' },
+          { label: 'LinkedIn', href: profile.linkedin, iconKey: 'linkedin', style: 'ghost' },
+        ]
 
   return (
     <section id="home" className="hero" aria-label="Introduction">
@@ -34,23 +51,23 @@ export default function Hero() {
         <p className="hero__lede">{profile.tagline}</p>
 
         <div className="hero__actions">
-          <a href="#contact" className="btn btn-primary">
-            <IconMail size={16} />
-            Get In Touch
-          </a>
-          <a href="#projects" className="btn btn-ghost">
-            <IconMonitor size={16} />
-            View Projects
-          </a>
-          <a
-            href={profile.linkedin}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="btn btn-ghost"
-          >
-            <IconLinkedIn size={16} />
-            LinkedIn
-          </a>
+          {ctas.map((cta) => {
+            const Icon = iconMap[(cta.iconKey || '').toLowerCase()] || IconMail
+            const className = cta.style === 'primary' ? 'btn btn-primary' : 'btn btn-ghost'
+            const external = (cta.href || '').startsWith('http')
+            return (
+              <a
+                key={`${cta.label}-${cta.href}`}
+                href={cta.href || '#'}
+                className={className}
+                target={external ? '_blank' : undefined}
+                rel={external ? 'noopener noreferrer' : undefined}
+              >
+                <Icon size={16} />
+                {cta.label}
+              </a>
+            )
+          })}
         </div>
       </div>
     </section>

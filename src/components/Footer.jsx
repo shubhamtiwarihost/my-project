@@ -1,7 +1,8 @@
-import { navLinks, profile } from '../data/content'
+import { useContent } from '../context/ContentProvider'
 import { IconGithub, IconLinkedIn } from './Icons'
 
 export default function Footer() {
+  const { navLinks, profile, footer } = useContent()
   const year = new Date().getFullYear()
 
   return (
@@ -25,28 +26,24 @@ export default function Footer() {
           </nav>
 
           <div className="site-footer__social">
-            <a
-              href={profile.linkedin}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="LinkedIn"
-            >
-              <IconLinkedIn size={16} />
-            </a>
-            <a
-              href={profile.github}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label="GitHub"
-            >
-              <IconGithub size={16} />
-            </a>
+            {profile.linkedin && (
+              <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                <IconLinkedIn size={16} />
+              </a>
+            )}
+            {profile.github && (
+              <a href={profile.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                <IconGithub size={16} />
+              </a>
+            )}
           </div>
         </div>
 
         <div className="site-footer__bottom">
-          <p>© {year} {profile.shortName}. All rights reserved.</p>
-          <p>Elite Senior PHP Developer · Laravel · Drupal · AWS</p>
+          <p>
+            © {year} {footer.copyrightName}. All rights reserved.
+          </p>
+          <p>{footer.tagline}</p>
         </div>
       </div>
     </footer>

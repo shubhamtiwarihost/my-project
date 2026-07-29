@@ -1,8 +1,9 @@
 import { useEffect, useState } from 'react'
-import { navLinks, profile } from '../data/content'
+import { useContent } from '../context/ContentProvider'
 import { IconMenu } from './Icons'
 
 export default function Navbar() {
+  const { navLinks, profile, navbar } = useContent()
   const [scrolled, setScrolled] = useState(false)
   const [active, setActive] = useState('home')
   const [menuOpen, setMenuOpen] = useState(false)
@@ -22,7 +23,7 @@ export default function Navbar() {
     onScroll()
     window.addEventListener('scroll', onScroll, { passive: true })
     return () => window.removeEventListener('scroll', onScroll)
-  }, [])
+  }, [navLinks])
 
   useEffect(() => {
     document.body.style.overflow = menuOpen ? 'hidden' : ''
@@ -53,7 +54,7 @@ export default function Navbar() {
 
         <div className="site-nav__actions">
           <a href="#contact" className="btn btn-primary site-nav__cta">
-            Let&apos;s Talk
+            {navbar.ctaLabel}
           </a>
           <button
             type="button"
@@ -81,7 +82,7 @@ export default function Navbar() {
             </a>
           ))}
           <a href="#contact" className="btn btn-primary" onClick={() => setMenuOpen(false)}>
-            Let&apos;s Talk
+            {navbar.ctaLabel}
           </a>
         </div>
       </div>

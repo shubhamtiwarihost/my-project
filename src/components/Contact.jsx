@@ -1,54 +1,71 @@
 import { useEffect, useState } from 'react'
-import { contactCopy, profile } from '../data/content'
+import { useContent } from '../context/ContentProvider'
 import { useInView } from '../hooks/useInView'
+import { submitContact } from '../lib/api'
 import { IconLinkedIn, IconMail, IconPhone, IconSend } from './Icons'
 
-const contactItems = [
-  {
-    label: 'Email',
-    value: profile.email,
-    href: profile.emailMailto,
-    icon: IconMail,
-  },
-  {
-    label: 'LinkedIn',
-    value: 'Connect on LinkedIn',
-    href: profile.linkedin,
-    icon: IconLinkedIn,
-  },
-  {
-    label: 'Phone',
-    value: profile.phone,
-    href: profile.phoneHref,
-    icon: IconPhone,
-  },
-]
-
 export default function Contact() {
+  const { contactCopy, profile } = useContent()
   const [ref, visible] = useInView()
-  const [form, setForm] = useState({ name: '', email: '', subject: '', message: '' })
+  const [form, setForm] = useState({ name: '', email: '', subject: '', phone: '', message: '' })
   const [sent, setSent] = useState(false)
+  const [error, setError] = useState('')
+  const [submitting, setSubmitting] = useState(false)
+
+  const contactItems = [
+    {
+      label: 'Email',
+      value: profile.email,
+      href: profile.emailMailto,
+      icon: IconMail,
+    },
+    {
+      label: 'LinkedIn',
+      value: 'Connect on LinkedIn',
+      href: profile.linkedin,
+      icon: IconLinkedIn,
+    },
+    {
+      label: 'Phone',
+      value: profile.phone,
+      href: profile.phoneHref,
+      icon: IconPhone,
+    },
+  ]
 
   useEffect(() => {
     if (!sent) return undefined
-    const timer = setTimeout(() => setSent(false), 3000)
+    const timer = setTimeout(() => setSent(false), 4000)
     return () => clearTimeout(timer)
   }, [sent])
 
   const handleChange = (e) => setForm((prev) => ({ ...prev, [e.target.name]: e.target.value }))
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    const body = [
-      `Name: ${form.name}`,
-      `Email: ${form.email}`,
-      '',
-      form.message,
-    ].join('\n')
-    const mailto = `${profile.emailMailto}?subject=${encodeURIComponent(form.subject)}&body=${encodeURIComponent(body)}`
-    window.location.href = mailto
-    setSent(true)
-    setForm({ name: '', email: '', subject: '', message: '' })
+    setError('')
+    setSubmitting(true)
+    try {
+      await submitContact(form)
+      setSent(true)
+      setForm({ name: '', email: '', subject: '', phone: '', message: '' })
+    } catch {
+      // Fallback to mailto if API is unavailable
+      const body = [
+        `Name: ${form.name}`,
+        `Email: ${form.email}`,
+        form.phone ? `Phone: ${form.phone}` : '',
+        '',
+        form.message,
+      ]
+        .filter(Boolean)
+        .join('\n')
+      window.location.href = `${profile.emailMailto}?subject=${encodeURIComponent(form.subject)}&body=${encodeURIComponent(body)}`
+      setSent(true)
+      setForm({ name: '', email: '', subject: '', phone: '', message: '' })
+    } finally {
+      setSubmitting(false)
+    }
   }
 
   return (
@@ -101,6 +118,18 @@ export default function Contact() {
                 </a>
               )
             })}
+
+            {profile.resumeUrl && (
+              <a className="contact-link" href={profile.resumeUrl}>
+                <span className="contact-link__icon">
+                  <IconSend />
+                </span>
+                <span>
+                  <span className="contact-link__label">Resume</span>
+                  <span className="contact-link__value">Download PDF</span>
+                </span>
+              </a>
+            )}
           </div>
 
           <div className="contact-form-wrap">
@@ -113,6 +142,7 @@ export default function Contact() {
               </div>
             ) : (
               <form className="contact-form" onSubmit={handleSubmit}>
+                {error && <p className="stack-line" style={{ color: '#b42318' }}>{error}</p>}
                 <div className="contact-form__row">
                   <label>
                     <span>Name</span>
@@ -139,6 +169,16 @@ export default function Contact() {
                   </label>
                 </div>
                 <label>
+                  <span>Phone (optional)</span>
+                  <input
+                    name="phone"
+                    value={form.phone}
+                    onChange={handleChange}
+                    placeholder="+91 ..."
+                    autoComplete="tel"
+                  />
+                </label>
+                <label>
                   <span>Subject</span>
                   <input
                     name="subject"
@@ -159,9 +199,9 @@ export default function Contact() {
                     rows={5}
                   />
                 </label>
-                <button type="submit" className="btn btn-primary contact-form__submit">
+                <button type="submit" className="btn btn-primary contact-form__submit" disabled={submitting}>
                   <IconSend />
-                  Send Message
+                  {submitting ? 'Sending…' : 'Send Message'}
                 </button>
               </form>
             )}

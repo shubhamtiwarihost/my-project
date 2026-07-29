@@ -1,8 +1,9 @@
-import { about, profile } from '../data/content'
+import { useContent } from '../context/ContentProvider'
 import { useInView } from '../hooks/useInView'
 import { IconCheck } from './Icons'
 
 export default function About() {
+  const { about, profile } = useContent()
   const [ref, visible] = useInView()
 
   return (
@@ -27,7 +28,7 @@ export default function About() {
 
         <div className="highlight-grid">
           {about.highlights.map((item, index) => (
-            <article key={item.id} className="highlight-item">
+            <article key={item.id || item.title} className="highlight-item">
               <span className="highlight-item__index" aria-hidden="true">
                 {String(index + 1).padStart(2, '0')}
               </span>

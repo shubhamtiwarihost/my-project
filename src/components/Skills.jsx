@@ -1,7 +1,8 @@
-import { alsoUsed, skillGroups } from '../data/content'
+import { useContent } from '../context/ContentProvider'
 import { useInView } from '../hooks/useInView'
 
 export default function Skills() {
+  const { skillGroups, alsoUsed, skillsCopy } = useContent()
   const [ref, visible] = useInView()
 
   return (
@@ -9,11 +10,8 @@ export default function Skills() {
       <div className={`container reveal ${visible ? 'is-visible' : ''}`} ref={ref}>
         <header className="section-head">
           <p className="eyebrow">Skills</p>
-          <h2 className="section-title">Technical skills, organized for delivery.</h2>
-          <p className="section-subtitle">
-            Clean groupings that reflect real-world execution: PHP backends, Drupal CMS, APIs, databases,
-            and AWS cloud delivery.
-          </p>
+          <h2 className="section-title">{skillsCopy.title}</h2>
+          <p className="section-subtitle">{skillsCopy.subtitle}</p>
         </header>
 
         <div className="skills-grid">
