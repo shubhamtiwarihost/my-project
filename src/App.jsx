@@ -10,7 +10,7 @@ import Footer from './components/Footer'
 
 function App() {
   return (
-    <div style={{ minHeight: '100vh' }}>
+    <div className="app-shell">
       <Navbar />
       <main>
         <Hero />
