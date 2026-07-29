@@ -14,6 +14,7 @@ use App\Controllers\AnalyticsController;
 use App\Controllers\AccountController;
 use App\Controllers\BackupController;
 use App\Controllers\SocialController;
+use App\Controllers\ToolsController;
 
 return [
     'GET|/'              => [DashboardController::class, 'index'],
@@ -25,7 +26,9 @@ return [
     'GET|/sections/{slug}'       => [SectionController::class, 'edit'],
     'POST|/sections/{slug}'      => [SectionController::class, 'save'],
     'POST|/sections/{slug}/item' => [SectionController::class, 'saveItem'],
+    'POST|/sections/{slug}/toggle' => [SectionController::class, 'toggleSection'],
     'POST|/sections/item/{id}/delete' => [SectionController::class, 'deleteItem'],
+    'POST|/sections/item/{id}/toggle' => [SectionController::class, 'toggleItem'],
 
     'GET|/media'         => [MediaController::class, 'index'],
     'POST|/media/upload' => [MediaController::class, 'upload'],
@@ -57,4 +60,7 @@ return [
     'POST|/account/password' => [AccountController::class, 'updatePassword'],
 
     'GET|/backups'       => [BackupController::class, 'index'],
+
+    'GET|/tools'         => [ToolsController::class, 'index'],
+    'POST|/tools/seed'   => [ToolsController::class, 'seedContent'],
 ];

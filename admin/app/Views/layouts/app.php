@@ -39,6 +39,7 @@
         <a class="nav-link <?= active_nav('analytics/downloads') ?>" href="<?= e(url('analytics/downloads')) ?>">Resume Downloads</a>
 
         <div class="nav-section">System</div>
+        <a class="nav-link <?= active_nav('tools') ?>" href="<?= e(url('tools')) ?>">Tools / Seed</a>
         <a class="nav-link <?= active_nav('backups') ?>" href="<?= e(url('backups')) ?>">Backups</a>
         <a class="nav-link <?= active_nav('account/password') ?>" href="<?= e(url('account/password')) ?>">Change Password</a>
       </nav>

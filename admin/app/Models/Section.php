@@ -126,6 +126,37 @@ final class Section
         $stmt->execute(['id' => $id]);
     }
 
+    public static function updateItemMeta(int $id, array $meta): void
+    {
+        $fields = [];
+        $params = ['id' => $id];
+        if (array_key_exists('label', $meta)) {
+            $fields[] = 'label = :label';
+            $params['label'] = (string) $meta['label'];
+        }
+        if (array_key_exists('sort_order', $meta)) {
+            $fields[] = 'sort_order = :sort_order';
+            $params['sort_order'] = (int) $meta['sort_order'];
+        }
+        if (array_key_exists('is_active', $meta)) {
+            $fields[] = 'is_active = :is_active';
+            $params['is_active'] = (int) $meta['is_active'] ? 1 : 0;
+        }
+        if (!$fields) {
+            return;
+        }
+        $sql = 'UPDATE section_items SET ' . implode(', ', $fields) . ' WHERE id = :id AND deleted_at IS NULL';
+        Database::connection()->prepare($sql)->execute($params);
+    }
+
+    public static function setSectionActive(int $sectionId, bool $active): void
+    {
+        $stmt = Database::connection()->prepare(
+            'UPDATE sections SET is_active = :active WHERE id = :id AND deleted_at IS NULL'
+        );
+        $stmt->execute(['active' => $active ? 1 : 0, 'id' => $sectionId]);
+    }
+
     public static function upsertValue(int $itemId, int $fieldDefId, ?string $text, ?int $mediaId = null): void
     {
         $pdo = Database::connection();

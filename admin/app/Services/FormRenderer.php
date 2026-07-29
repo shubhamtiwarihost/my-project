@@ -131,20 +131,38 @@ final class FormRenderer
 
     private static function mediaInput(string $id, string $name, string $type, mixed $mediaId, string $val): string
     {
-        $accept = match ($type) {
-            'pdf' => 'application/pdf',
-            'image' => 'image/*',
-            default => '*/*',
-        };
-        $current = $mediaId ? 'Current media ID: ' . e((string) $mediaId) : 'No file linked yet';
         $mediaUrl = htmlspecialchars(url('media'), ENT_QUOTES, 'UTF-8');
-        $mediaVal = htmlspecialchars((string) ($mediaId ?? ''), ENT_QUOTES, 'UTF-8');
+        $selected = (string) ($mediaId ?? '');
+        $options = '<option value="">— None —</option>';
+
+        try {
+            $rows = \App\Models\Media::all(80);
+            foreach ($rows as $m) {
+                if ($type === 'pdf' && !str_contains((string) $m['mime_type'], 'pdf')) {
+                    continue;
+                }
+                if ($type === 'image' && !str_starts_with((string) $m['mime_type'], 'image/')) {
+                    continue;
+                }
+                $mid = (string) $m['id'];
+                $sel = $mid === $selected ? 'selected' : '';
+                $label = '#' . $mid . ' · ' . $m['original_name'];
+                $options .= '<option value="' . e($mid) . '" ' . $sel . '>' . e($label) . '</option>';
+            }
+        } catch (\Throwable) {
+            // Media table may be unavailable during early setup
+        }
+
         return <<<HTML
-        <div class="input-group">
-            <input type="number" class="form-control" id="{$id}" name="{$name}" value="{$mediaVal}" placeholder="Media ID">
-            <a class="btn btn-outline-secondary" href="{$mediaUrl}" target="_blank">Open Media</a>
+        <div class="row g-2 align-items-end">
+          <div class="col-md-8">
+            <select class="form-select" id="{$id}" name="{$name}">{$options}</select>
+          </div>
+          <div class="col-md-4">
+            <a class="btn btn-outline-secondary w-100" href="{$mediaUrl}" target="_blank">Media Manager</a>
+          </div>
         </div>
-        <div class="form-text">{$current}. Upload in Media Manager, then paste the media ID here. (accept: {$accept})</div>
+        <div class="form-text">Pick an uploaded file, or open Media Manager to upload first.</div>
         HTML;
     }
 }

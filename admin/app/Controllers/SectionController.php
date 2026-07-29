@@ -19,6 +19,7 @@ final class SectionController extends Controller
         $this->render('sections.index', [
             'title'    => 'Sections',
             'sections' => Section::allActive(),
+            'success'  => flash('success'),
             'unread'   => \App\Models\Dashboard::unreadMessages(),
         ]);
     }
@@ -168,16 +169,53 @@ final class SectionController extends Controller
             Section::upsertValue((int) $itemId, (int) $def['id'], $text, $mediaId);
         }
 
-        // refresh label from first text-like field if present
-        if (!empty($posted['title']) || !empty($posted['role']) || !empty($posted['label'])) {
-            $newLabel = (string) ($posted['title'] ?? $posted['role'] ?? $posted['label'] ?? $label);
-            $pdo = \App\Core\Database::connection();
-            $stmt = $pdo->prepare('UPDATE section_items SET label = :label WHERE id = :id');
-            $stmt->execute(['label' => $newLabel, 'id' => $itemId]);
+        $metaLabel = trim((string) ($_POST['label'] ?? ''));
+        if ($metaLabel === '') {
+            $metaLabel = (string) ($posted['title'] ?? $posted['role'] ?? $posted['company'] ?? $posted['label'] ?? $posted['text'] ?? $label);
         }
 
-        AuditLog::write(Auth::id(), $itemId ? 'update' : 'create', 'section_items', $itemId, null, $posted);
+        Section::updateItemMeta((int) $itemId, [
+            'label'      => $metaLabel,
+            'sort_order' => (int) ($_POST['sort_order'] ?? 0),
+            'is_active'  => isset($_POST['is_active']) ? 1 : 0,
+        ]);
+
+        AuditLog::write(Auth::id(), 'update', 'section_items', $itemId, null, $posted);
         flash('success', 'Item saved.');
+        redirect('/sections/' . $slug);
+    }
+
+    public function toggleSection(string $slug): void
+    {
+        $this->requireAuth();
+        Csrf::requireValid();
+        $section = Section::findBySlug($slug);
+        if (!$section) {
+            flash('error', 'Section not found.');
+            redirect('/sections');
+        }
+        $next = !((int) $section['is_active'] === 1);
+        Section::setSectionActive((int) $section['id'], $next);
+        AuditLog::write(Auth::id(), 'update', 'sections', (int) $section['id'], ['is_active' => $section['is_active']], ['is_active' => $next ? 1 : 0]);
+        flash('success', $next ? 'Section activated.' : 'Section deactivated.');
+        redirect('/sections');
+    }
+
+    public function toggleItem(string $id): void
+    {
+        $this->requireAuth();
+        Csrf::requireValid();
+        $itemId = (int) $id;
+        $item = Section::findItem($itemId);
+        if (!$item) {
+            redirect('/sections');
+        }
+        $next = !((int) $item['is_active'] === 1);
+        Section::updateItemMeta($itemId, ['is_active' => $next ? 1 : 0]);
+        $stmt = Database::connection()->prepare('SELECT slug FROM sections WHERE id = :id');
+        $stmt->execute(['id' => $item['section_id']]);
+        $slug = (string) ($stmt->fetchColumn() ?: '');
+        flash('success', $next ? 'Item activated.' : 'Item deactivated.');
         redirect('/sections/' . $slug);
     }
 
