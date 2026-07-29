@@ -1,0 +1,7 @@
+images/
+documents/
+backups/
+!images/.gitkeep
+!documents/.gitkeep
+!backups/.gitkeep
+!index.php

@@ -22,7 +22,43 @@ jobs:
         run: npm install
 
       - name: Build Project
+        env:
+          VITE_API_BASE: https://gyaando.com/techbio/api
         run: npx vite build --base=/techbio/
+
+      - name: Prepare deploy package
+        env:
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+        run: |
+          set -e
+          mkdir -p deploy
+          # Frontend build
+          cp -R dist/. deploy/
+          # Admin CMS + Public API
+          cp -R admin deploy/admin
+          cp -R api deploy/api
+
+          # Keep uploads folder present but empty in package (real uploads stay on server)
+          mkdir -p deploy/admin/storage/uploads/images
+          mkdir -p deploy/admin/storage/uploads/documents
+          mkdir -p deploy/admin/storage/uploads/backups
+
+          if [ -z "$DB_PASSWORD" ]; then
+            echo "Missing GitHub secret: DB_PASSWORD"
+            exit 1
+          fi
+
+          # Inject DB password into admin config (do not commit real password)
+          python3 - <<'PY'
+          import os, pathlib
+          path = pathlib.Path("deploy/admin/config/config.php")
+          text = path.read_text()
+          pwd = os.environ["DB_PASSWORD"].replace("\\", "\\\\").replace("'", "\\'")
+          if "__DB_PASSWORD__" not in text:
+              raise SystemExit("Placeholder __DB_PASSWORD__ not found in config.php")
+          path.write_text(text.replace("__DB_PASSWORD__", pwd))
+          print("DB password injected into admin config")
+          PY
 
       - name: Deploy to Hostinger FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
@@ -32,6 +68,15 @@ jobs:
           password: ${{ secrets.FTP_PASSWORD }}
           protocol: ftp
           port: 21
-          local-dir: ./dist/
+          local-dir: ./deploy/
           server-dir: ${{ secrets.FTP_TARGET_DIR }}
-          dangerous-clean-slate: true
+          # false = do not wipe existing media uploads on every deploy
+          dangerous-clean-slate: false
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+            admin/storage/uploads/images/**
+            admin/storage/uploads/documents/**
+            admin/storage/uploads/backups/**
+            **/.DS_Store

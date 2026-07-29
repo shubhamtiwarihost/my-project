@@ -10,7 +10,11 @@ lerna-debug.log*
 node_modules
 dist
 dist-ssr
+deploy
 *.local
+.env
+.env.*
+!.env.example
 
 # Editor directories and files
 .vscode/*
@@ -22,3 +26,10 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+
+# CMS uploaded media (keep folder structure only)
+admin/storage/uploads/images/*
+admin/storage/uploads/documents/*
+admin/storage/uploads/backups/*
+!admin/storage/uploads/**/.gitkeep
+!admin/storage/uploads/**/index.php

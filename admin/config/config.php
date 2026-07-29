@@ -17,7 +17,7 @@ return [
         'port'    => '3306',
         'name'    => 'u932835494_portfolio',
         'user'    => 'u932835494_portfolio',
-        'pass'    => '', // <<< put your Hostinger DB password here
+        'pass'    => '__DB_PASSWORD__', // injected by GitHub Actions from secrets.DB_PASSWORD
         'charset' => 'utf8mb4',
     ],
 
