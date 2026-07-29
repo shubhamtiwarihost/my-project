@@ -1,0 +1,9 @@
+RewriteEngine On
+RewriteBase /
+
+# If deployed in a subdirectory, Hostinger may need:
+# RewriteBase /admin/public/
+
+RewriteCond %{REQUEST_FILENAME} !-f
+RewriteCond %{REQUEST_FILENAME} !-d
+RewriteRule ^ index.php [L]
