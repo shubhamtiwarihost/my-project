@@ -1,73 +1,62 @@
-import { useEffect, useRef } from 'react'
 import { useContent } from '../context/ContentProvider'
-import { IconLinkedIn, IconMail, IconMonitor } from './Icons'
+import { IconGithub, IconLinkedIn, IconMail } from './Icons'
 
-const defaultHeroImage = `${import.meta.env.BASE_URL}hero-bg.jpg`
-
-const iconMap = {
-  mail: IconMail,
-  linkedin: IconLinkedIn,
-  monitor: IconMonitor,
-}
+const FLOAT_TAGS = ['PHP', 'Drupal', 'Laravel', 'AWS', 'Backend']
 
 export default function Hero() {
-  const { profile, hero } = useContent()
-  const ref = useRef(null)
-  const heroImage = hero.backgroundUrl || defaultHeroImage
-
-  useEffect(() => {
-    const timer = setTimeout(() => {
-      ref.current?.classList.add('is-ready')
-    }, 60)
-    return () => clearTimeout(timer)
-  }, [])
-
-  const ctas =
-    hero.ctas?.length > 0
-      ? hero.ctas
-      : [
-          { label: 'Get In Touch', href: '#contact', iconKey: 'mail', style: 'primary' },
-          { label: 'View Projects', href: '#projects', iconKey: 'monitor', style: 'ghost' },
-          { label: 'LinkedIn', href: profile.linkedin, iconKey: 'linkedin', style: 'ghost' },
-        ]
+  const { profile, hero, settings } = useContent()
+  const photo = settings?.logo || hero?.backgroundUrl || null
 
   return (
-    <section id="home" className="hero" aria-label="Introduction">
-      <div className="hero-media" aria-hidden="true">
-        <img
-          src={heroImage}
-          alt=""
-          width={1920}
-          height={1282}
-          fetchPriority="high"
-          decoding="async"
-        />
-        <div className="hero-media__veil" />
-      </div>
+    <section id="home" className="hero-neo section" aria-label="Introduction">
+      <div className="container">
+        <div className="hero-neo__grid">
+          <div>
+            <p className="hero-neo__hello">Hello, I&apos;m</p>
+            <h1 className="hero-neo__name">{profile.name}</h1>
+            <p className="hero-neo__role">{profile.role}</p>
+            <p className="hero-neo__stack">{profile.stackLine}</p>
 
-      <div className="container hero__content" ref={ref}>
-        <p className="hero__brand">{profile.name}</p>
-        <h1 className="hero__title">{profile.role}</h1>
-        <p className="hero__lede">{profile.tagline}</p>
+            <div className="hero-neo__actions">
+              {profile.resumeUrl ? (
+                <a className="btn btn-primary" href={profile.resumeUrl}>Download Resume</a>
+              ) : (
+                <a className="btn btn-primary" href="#contact">Download Resume</a>
+              )}
+              <a className="btn btn-ghost" href="#contact">Hire Me</a>
+              <a className="btn btn-ghost" href="#projects">View Projects</a>
+            </div>
 
-        <div className="hero__actions">
-          {ctas.map((cta) => {
-            const Icon = iconMap[(cta.iconKey || '').toLowerCase()] || IconMail
-            const className = cta.style === 'primary' ? 'btn btn-primary' : 'btn btn-ghost'
-            const external = (cta.href || '').startsWith('http')
-            return (
-              <a
-                key={`${cta.label}-${cta.href}`}
-                href={cta.href || '#'}
-                className={className}
-                target={external ? '_blank' : undefined}
-                rel={external ? 'noopener noreferrer' : undefined}
-              >
-                <Icon size={16} />
-                {cta.label}
-              </a>
-            )
-          })}
+            <div className="hero-neo__follow">
+              <span>Follow Me</span>
+              {profile.linkedin && (
+                <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
+                  <IconLinkedIn size={15} />
+                </a>
+              )}
+              {profile.github && (
+                <a href={profile.github} target="_blank" rel="noopener noreferrer" aria-label="GitHub">
+                  <IconGithub size={15} />
+                </a>
+              )}
+              <a href={profile.emailMailto} aria-label="Email"><IconMail size={15} /></a>
+            </div>
+          </div>
+
+          <div className="hero-neo__portrait-wrap" aria-hidden="true">
+            <div className="hero-neo__portrait">
+              <div className="hero-neo__portrait-inner">
+                {photo ? (
+                  <img src={photo} alt="" />
+                ) : (
+                  <span className="hero-neo__avatar-fallback">{profile.initials}</span>
+                )}
+              </div>
+            </div>
+            {FLOAT_TAGS.map((tag, i) => (
+              <span key={tag} className={`hero-neo__float hero-neo__float--${i + 1}`}>{tag}</span>
+            ))}
+          </div>
         </div>
       </div>
     </section>

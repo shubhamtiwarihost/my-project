@@ -1,74 +1,38 @@
-import { useState } from 'react'
 import { useContent } from '../context/ContentProvider'
 import { useInView } from '../hooks/useInView'
-import { IconCheck, IconChevron, IconInfo } from './Icons'
 
 export default function Projects() {
-  const { projects, projectsNote, projectsCopy } = useContent()
+  const { projects, projectsCopy } = useContent()
   const [ref, visible] = useInView()
-  const [expanded, setExpanded] = useState(null)
 
   return (
-    <section id="projects" className="section section--tint">
+    <section id="projects" className="section">
       <div className={`container reveal ${visible ? 'is-visible' : ''}`} ref={ref}>
         <header className="section-head">
-          <p className="eyebrow">Projects</p>
-          <h2 className="section-title">{projectsCopy.title}</h2>
-          <p className="section-subtitle">{projectsCopy.subtitle}</p>
+          <p className="eyebrow">Portfolio</p>
+          <h2 className="section-title">{projectsCopy?.title || 'Featured Projects'}</h2>
+          <p className="section-subtitle">{projectsCopy?.subtitle}</p>
         </header>
 
-        <div className="projects-grid">
-          {projects.map((project, index) => {
-            const open = expanded === index
-            return (
-              <article key={project.title} className={`project-panel ${open ? 'is-open' : ''}`}>
-                <div className="project-panel__head">
-                  <div>
-                    <p className="project-panel__category">{project.category}</p>
-                    <h3>{project.title}</h3>
-                  </div>
-                  <span className="project-panel__badge">{project.badge}</span>
-                </div>
-
-                <p className="project-panel__desc">{project.desc}</p>
-
-                <button
-                  type="button"
-                  className="project-panel__toggle"
-                  aria-expanded={open}
-                  onClick={() => setExpanded(open ? null : index)}
-                >
-                  {open ? 'Hide' : 'Show'} features
-                  <IconChevron open={open} />
-                </button>
-
-                {open && (
-                  <ul className="check-list project-panel__features">
-                    {project.features.map((feature) => (
-                      <li key={feature}>
-                        <IconCheck size={12} />
-                        <span>{feature}</span>
-                      </li>
-                    ))}
-                  </ul>
-                )}
-
-                <div className="skill-group__tags project-panel__tech">
-                  {project.tech.map((t) => (
-                    <span key={t} className="tag">
-                      {t}
-                    </span>
+        <div className="projects-neo">
+          {projects.map((project) => (
+            <article key={project.title} className="project-neo glass">
+              <div className="project-neo__media" aria-hidden="true">
+                {(project.title || '?').slice(0, 2).toUpperCase()}
+              </div>
+              <div className="project-neo__body">
+                <p className="project-neo__cat">{project.category || project.badge}</p>
+                <h3>{project.title}</h3>
+                <p>{project.desc}</p>
+                <div className="project-neo__tags">
+                  {(project.tech || []).map((t) => (
+                    <span key={t} className="tag">{t}</span>
                   ))}
                 </div>
-              </article>
-            )
-          })}
+              </div>
+            </article>
+          ))}
         </div>
-
-        <aside className="note-banner">
-          <IconInfo />
-          <p>{projectsNote}</p>
-        </aside>
       </div>
     </section>
   )
