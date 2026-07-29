@@ -15,6 +15,7 @@ use App\Controllers\AccountController;
 use App\Controllers\BackupController;
 use App\Controllers\SocialController;
 use App\Controllers\ToolsController;
+use App\Controllers\ResumeController;
 
 return [
     'GET|/'              => [DashboardController::class, 'index'],
@@ -33,6 +34,10 @@ return [
     'GET|/media'         => [MediaController::class, 'index'],
     'POST|/media/upload' => [MediaController::class, 'upload'],
     'POST|/media/{id}/delete' => [MediaController::class, 'delete'],
+
+    'GET|/resume'            => [ResumeController::class, 'index'],
+    'POST|/resume/upload'    => [ResumeController::class, 'upload'],
+    'POST|/resume/set-active'=> [ResumeController::class, 'setActive'],
 
     'GET|/navigation'    => [NavigationController::class, 'index'],
     'POST|/navigation'   => [NavigationController::class, 'save'],

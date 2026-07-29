@@ -19,7 +19,8 @@
   <ol class="small mb-0">
     <li>Run content seed</li>
     <li>Review each section under <strong>Sections</strong></li>
-    <li>Upload resume PDF + hero image in <strong>Media</strong>, then link them in Profile / Hero</li>
+    <li>Upload resume PDF under <strong>Resume PDF</strong> (Publish) — same file is what visitors download on the site</li>
+    <li>Upload hero image in <strong>Media</strong>, then link it in Hero</li>
     <li>Adjust Navigation, Social, SEO, Settings</li>
     <li>Open the public site — API content should replace fallbacks</li>
   </ol>

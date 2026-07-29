@@ -46,10 +46,19 @@ export default function Contact() {
               <strong>{profile.name}</strong>
               <p>{profile.role}</p>
               <p style={{ marginTop: '0.75rem' }}>{profile.tagline}</p>
+              {profile.resumeFileName ? (
+                <p style={{ marginTop: '0.75rem', opacity: 0.7 }}>File: {profile.resumeFileName}</p>
+              ) : null}
             </div>
             <div className="resume-neo__actions">
               {profile.resumeUrl ? (
-                <a className="btn btn-primary" href={profile.resumeUrl}>Download PDF</a>
+                <a
+                  className="btn btn-primary"
+                  href={profile.resumeUrl}
+                  download={profile.resumeFileName || 'resume.pdf'}
+                >
+                  Download PDF
+                </a>
               ) : (
                 <a className="btn btn-primary" href={`mailto:${profile.email}?subject=Resume%20request`}>Request Resume</a>
               )}

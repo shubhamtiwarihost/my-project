@@ -9,7 +9,9 @@ use App\Core\Controller;
 use App\Core\Csrf;
 use App\Core\Database;
 use App\Models\AuditLog;
+use App\Models\Dashboard;
 use App\Models\Section;
+use App\Services\ResumeService;
 
 final class SectionController extends Controller
 {
@@ -108,6 +110,15 @@ final class SectionController extends Controller
             }
 
             Section::upsertValue((int) $item['id'], (int) $def['id'], $text, $mediaId);
+        }
+
+        // Keep public download in sync when Profile resume PDF is set
+        if ($slug === 'profile' && !empty($posted['resume_pdf']) && ctype_digit((string) $posted['resume_pdf'])) {
+            try {
+                ResumeService::setActive((int) $posted['resume_pdf']);
+            } catch (\Throwable) {
+                // section values already saved
+            }
         }
 
         AuditLog::write(Auth::id(), 'update', 'section_items', (int) $item['id'], null, $posted);

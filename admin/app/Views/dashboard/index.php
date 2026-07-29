@@ -63,6 +63,12 @@
     </div>
 
     <div class="card-soft p-3 mt-3">
+      <h2 class="h6 mb-2">Quick actions</h2>
+      <a class="btn btn-sm btn-success me-2" href="<?= e(url('resume')) ?>">Upload / Publish Resume</a>
+      <a class="btn btn-sm btn-outline-secondary" href="<?= e(url('analytics/downloads')) ?>">Download stats</a>
+    </div>
+
+    <div class="card-soft p-3 mt-3">
       <h2 class="h6 mb-2">Active Widgets</h2>
       <div class="d-flex flex-wrap gap-2">
         <?php foreach ($widgets as $w): ?>

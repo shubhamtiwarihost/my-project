@@ -10,6 +10,7 @@ use App\Core\Csrf;
 use App\Core\Database;
 use App\Models\AuditLog;
 use App\Models\Dashboard;
+use App\Services\ResumeService;
 
 final class SettingsController extends Controller
 {
@@ -40,20 +41,52 @@ final class SettingsController extends Controller
         if (!is_array($settings)) {
             redirect('/settings');
         }
+
         $pdo = Database::connection();
-        $stmt = $pdo->prepare(
-            'UPDATE site_settings SET setting_value = :val, media_id = :mid WHERE id = :id AND deleted_at IS NULL'
+        $fetch = $pdo->prepare(
+            'SELECT id, setting_key, value_type FROM site_settings WHERE id = :id AND deleted_at IS NULL LIMIT 1'
         );
+        $update = $pdo->prepare(
+            'UPDATE site_settings SET setting_value = :val, media_id = :mid, updated_at = NOW() WHERE id = :id AND deleted_at IS NULL'
+        );
+
+        $resumeMediaId = null;
+
         foreach ($settings as $id => $value) {
             $id = (int) $id;
-            $mid = null;
-            $val = is_array($value) ? json_encode($value) : (string) $value;
-            // media-type settings may store media id in value
-            if (ctype_digit($val) && $val !== '') {
-                // keep as value; media_id updated only when explicitly media type handled later
+            $fetch->execute(['id' => $id]);
+            $row = $fetch->fetch();
+            if (!$row) {
+                continue;
             }
-            $stmt->execute(['val' => $val, 'mid' => $mid, 'id' => $id]);
+
+            $val = is_array($value) ? json_encode($value) : (string) $value;
+            $mid = null;
+
+            if ($row['value_type'] === 'media') {
+                if ($val !== '' && ctype_digit($val)) {
+                    $mid = (int) $val;
+                    $val = (string) $mid;
+                } else {
+                    $mid = null;
+                    $val = '';
+                }
+                if ($row['setting_key'] === 'resume_media_id' && $mid) {
+                    $resumeMediaId = $mid;
+                }
+            }
+
+            $update->execute(['val' => $val, 'mid' => $mid, 'id' => $id]);
         }
+
+        if ($resumeMediaId) {
+            try {
+                ResumeService::setActive($resumeMediaId);
+            } catch (\Throwable) {
+                // setting row already saved; profile sync is best-effort
+            }
+        }
+
         AuditLog::write(Auth::id(), 'update', 'site_settings', null, null, $settings);
         flash('success', 'Settings saved.');
         redirect('/settings');

@@ -20,6 +20,7 @@
 
         <div class="nav-section">Content</div>
         <a class="nav-link <?= active_nav('sections') ?>" href="<?= e(url('sections')) ?>">Sections</a>
+        <a class="nav-link <?= active_nav('resume') ?>" href="<?= e(url('resume')) ?>">Resume PDF</a>
         <a class="nav-link <?= active_nav('media') ?>" href="<?= e(url('media')) ?>">Media Manager</a>
         <a class="nav-link <?= active_nav('navigation') ?>" href="<?= e(url('navigation')) ?>">Navigation</a>
         <a class="nav-link <?= active_nav('social') ?>" href="<?= e(url('social')) ?>">Social Links</a>

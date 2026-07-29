@@ -19,7 +19,13 @@ export default function Hero() {
 
             <div className="hero-neo__actions">
               {profile.resumeUrl ? (
-                <a className="btn btn-primary" href={profile.resumeUrl}>Download Resume</a>
+                <a
+                  className="btn btn-primary"
+                  href={profile.resumeUrl}
+                  download={profile.resumeFileName || 'resume.pdf'}
+                >
+                  Download Resume
+                </a>
               ) : (
                 <a className="btn btn-primary" href="#contact">Download Resume</a>
               )}

@@ -29,9 +29,18 @@ final class ContentBuilder
         $phone = self::val($profileMap, 'phone', '+91 86993 82375');
         $phoneDigits = preg_replace('/\D+/', '', $phone) ?: '';
 
-        $resumeMediaId = self::mediaIdFrom($profileMap, 'resume_pdf');
+        $resumeMediaId = self::settingMediaId($pdo, 'resume_media_id');
         if (!$resumeMediaId) {
-            $resumeMediaId = self::settingMediaId($pdo, 'resume_media_id');
+            $resumeMediaId = self::mediaIdFrom($profileMap, 'resume_pdf');
+        }
+
+        $resumeFileName = null;
+        if ($resumeMediaId) {
+            $mStmt = $pdo->prepare(
+                'SELECT original_name FROM media WHERE id = :id AND deleted_at IS NULL AND is_active = 1 LIMIT 1'
+            );
+            $mStmt->execute(['id' => $resumeMediaId]);
+            $resumeFileName = $mStmt->fetchColumn() ?: null;
         }
 
         $heroBgId = self::mediaIdFrom($heroMap, 'background_image');
@@ -55,6 +64,8 @@ final class ContentBuilder
             'phoneAlt'     => self::val($profileMap, 'phone_alt', ''),
             'linkedin'     => $linkedin,
             'github'       => $github,
+            'resumeMediaId'=> $resumeMediaId,
+            'resumeFileName'=> $resumeFileName,
             'resumeUrl'    => $resumeMediaId ? rtrim($mediaBaseUrl, '/') . '/media.php?id=' . $resumeMediaId . '&download=1' : null,
             'stats'        => self::mapItems($pdo, 'about', 'stat', static function (array $v): array {
                 return [
