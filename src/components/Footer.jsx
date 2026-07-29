@@ -46,7 +46,7 @@ export default function Footer() {
 
         <div className="site-footer__bottom">
           <p>© {year} {profile.shortName}. All rights reserved.</p>
-          <p>Senior Full-stack PHP Developer & Technical Lead</p>
+          <p>Elite Senior PHP Developer · Laravel · Drupal · AWS</p>
         </div>
       </div>
     </footer>

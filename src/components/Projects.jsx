@@ -12,10 +12,10 @@ export default function Projects() {
       <div className={`container reveal ${visible ? 'is-visible' : ''}`} ref={ref}>
         <header className="section-head">
           <p className="eyebrow">Projects</p>
-          <h2 className="section-title">Real SaaS, internal systems & WordPress builds</h2>
+          <h2 className="section-title">Enterprise backends, CMS & learning platforms</h2>
           <p className="section-subtitle">
-            Delivered end-to-end with client coordination and production support. Each project reflects full
-            ownership — from planning to post-launch.
+            Selected platforms spanning banking, corporate CMS, edtech, and real estate — with ownership
+            from architecture through production support.
           </p>
         </header>
 

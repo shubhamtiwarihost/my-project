@@ -1,4 +1,4 @@
-import { certifications, experiences } from '../data/content'
+import { education, experiences } from '../data/content'
 import { useInView } from '../hooks/useInView'
 import { IconCheck } from './Icons'
 
@@ -12,14 +12,13 @@ export default function Experience() {
           <p className="eyebrow">Experience</p>
           <h2 className="section-title">Professional experience</h2>
           <p className="section-subtitle">
-            Long-term ownership across enterprise apps, SaaS delivery, client coordination, and production
-            support.
+            Backend and CMS delivery across digital learning, enterprise apps, and production platforms.
           </p>
         </header>
 
         <div className="experience-list">
           {experiences.map((exp) => (
-            <article key={`${exp.company}-${exp.role}`} className="experience-item">
+            <article key={`${exp.company}-${exp.period}`} className="experience-item">
               <div className="experience-item__top">
                 <div>
                   <h3>{exp.role}</h3>
@@ -58,15 +57,13 @@ export default function Experience() {
         </div>
 
         <div className="certs">
-          <h3>Certifications & Recognition</h3>
-          <p>
-            Leadership training and performance recognition aligned with enterprise delivery outcomes.
-          </p>
+          <h3>Education</h3>
+          <p>Formal foundation in computer science and software engineering.</p>
           <div className="certs__grid">
-            {certifications.map((cert) => (
-              <article key={cert.title} className="cert-item">
-                <h4>{cert.title}</h4>
-                <p>{cert.issuer}</p>
+            {education.map((item) => (
+              <article key={item.title} className="cert-item">
+                <h4>{item.title}</h4>
+                <p>{item.issuer}</p>
               </article>
             ))}
           </div>

@@ -11,8 +11,8 @@ export default function Skills() {
           <p className="eyebrow">Skills</p>
           <h2 className="section-title">Technical skills, organized for delivery.</h2>
           <p className="section-subtitle">
-            Clean groupings that reflect real-world execution: backend systems, integrations, front-end
-            foundations, and team leadership.
+            Clean groupings that reflect real-world execution: PHP backends, Drupal CMS, APIs, databases,
+            and AWS cloud delivery.
           </p>
         </header>
 
