@@ -37,7 +37,7 @@ export default function About() {
               <div><strong>Email</strong><span><a href={profile.emailMailto}>{profile.email}</a></span></div>
               <div><IconPhone size={14} /><span>{profile.phone}</span></div>
               {profile.linkedin && (
-                <div><IconLinkedIn size={14} /><span><a href={profile.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn Profile </a></span></div>
+                <div><IconLinkedIn size={14} /><span><a href={profile.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn Profile</a></span></div>
               )}
             </div>
           </article>
