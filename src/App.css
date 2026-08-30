@@ -850,13 +850,27 @@
 
   .hero-scene__veil {
     background:
-      linear-gradient(180deg, rgba(7, 9, 12, 0.72) 0%, rgba(7, 9, 12, 0.92) 100%),
-      linear-gradient(90deg, rgba(7, 9, 12, 0.85), rgba(7, 9, 12, 0.7));
+      linear-gradient(180deg, rgba(7, 9, 12, 0.35) 0%, rgba(7, 9, 12, 0.72) 100%),
+      linear-gradient(90deg, rgba(7, 9, 12, 0.55), rgba(7, 9, 12, 0.28));
+  }
+
+  .hero-scene--lite .hero-scene__veil {
+    background:
+      linear-gradient(180deg, rgba(7, 9, 12, 0.28) 0%, rgba(7, 9, 12, 0.62) 100%),
+      linear-gradient(90deg, rgba(7, 9, 12, 0.45), rgba(7, 9, 12, 0.2));
   }
 
   .hero-3d--compact .hero-3d__grid {
     display: flex;
     flex-direction: column;
+  }
+
+  .hero-3d--compact {
+    min-height: 100svh;
+  }
+
+  .hero-3d--compact .hero-scene {
+    opacity: 1;
   }
 }
 

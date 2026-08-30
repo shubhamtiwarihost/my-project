@@ -14,8 +14,8 @@ export default function Hero() {
   const photo = settings?.logo || hero?.backgroundUrl || null
   const reducedMotion = usePrefersReducedMotion()
   const compact = useIsCompactDevice()
-  const enableScene = !reducedMotion && !compact
-  const enableParallax = enableScene
+  const enableScene = !reducedMotion
+  const enableParallax = enableScene && !compact
   const parallax = usePointerParallax(enableParallax)
 
   const portraitStyle = useMemo(() => {
@@ -36,7 +36,7 @@ export default function Hero() {
     <section id="home" className={`hero-3d${compact ? ' hero-3d--compact' : ''}`} aria-label="Introduction">
       {enableScene ? (
         <Suspense fallback={<div className="hero-scene hero-scene--fallback" />}>
-          <HeroScene animate />
+          <HeroScene animate lite={compact} />
         </Suspense>
       ) : (
         <div className="hero-scene hero-scene--fallback" aria-hidden="true" />
