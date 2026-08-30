@@ -105,7 +105,7 @@ export default function Contact() {
                       href={profile.resumeUrl}
                       download={profile.resumeFileName || 'resume.pdf'}
                     >
-                      Download PDF
+                      Download CV
                     </a>
                   ) : (
                     <a className="btn btn-primary" href={`mailto:${profile.email}?subject=Resume%20request`}>

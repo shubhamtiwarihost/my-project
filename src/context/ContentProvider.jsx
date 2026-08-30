@@ -18,6 +18,13 @@ function mergeContent(apiData, defaults) {
     ...defaults.profile,
     ...(apiData.profile || {}),
     stats: !isEmpty(apiData.profile?.stats) ? apiData.profile.stats : defaults.profile.stats,
+    // Keep local CV download if CMS has no published resume PDF
+    resumeUrl: !isEmpty(apiData.profile?.resumeUrl)
+      ? apiData.profile.resumeUrl
+      : defaults.profile.resumeUrl,
+    resumeFileName: !isEmpty(apiData.profile?.resumeFileName)
+      ? apiData.profile.resumeFileName
+      : defaults.profile.resumeFileName,
   }
 
   return {
@@ -43,26 +50,20 @@ function mergeContent(apiData, defaults) {
     projects: !isEmpty(apiData.projects) ? apiData.projects : defaults.projects,
     projectsNote: !isEmpty(apiData.projectsNote) ? apiData.projectsNote : defaults.projectsNote,
     skillsCopy: {
-      title: apiData.skillsCopy?.title || 'Technical skills, organized for delivery.',
-      subtitle:
-        apiData.skillsCopy?.subtitle ||
-        'Clean groupings that reflect real-world execution: PHP backends, Drupal CMS, APIs, databases, and AWS cloud delivery.',
+      title: apiData.skillsCopy?.title || defaults.skillsCopy.title,
+      subtitle: apiData.skillsCopy?.subtitle || defaults.skillsCopy.subtitle,
     },
     experienceCopy: {
-      title: apiData.experienceCopy?.title || 'Professional experience',
-      subtitle:
-        apiData.experienceCopy?.subtitle ||
-        'Backend and CMS delivery across digital learning, enterprise apps, and production platforms.',
+      title: apiData.experienceCopy?.title || defaults.experienceCopy.title,
+      subtitle: apiData.experienceCopy?.subtitle || defaults.experienceCopy.subtitle,
     },
     projectsCopy: {
-      title: apiData.projectsCopy?.title || 'Enterprise backends, CMS & learning platforms',
-      subtitle:
-        apiData.projectsCopy?.subtitle ||
-        'Selected platforms spanning banking, corporate CMS, edtech, and real estate — with ownership from architecture through production support.',
+      title: apiData.projectsCopy?.title || defaults.projectsCopy.title,
+      subtitle: apiData.projectsCopy?.subtitle || defaults.projectsCopy.subtitle,
     },
     contactCopy: { ...defaults.contactCopy, ...(apiData.contactCopy || {}) },
     footer: {
-      tagline: apiData.footer?.tagline || 'Elite Senior PHP Developer · Laravel · Drupal · AWS',
+      tagline: apiData.footer?.tagline || defaults.footer.tagline,
       copyrightName: apiData.footer?.copyrightName || profile.shortName,
     },
     navbar: {
@@ -91,21 +92,21 @@ const defaultBundle = {
   projectsNote: fallback.projectsNote,
   contactCopy: fallback.contactCopy,
   skillsCopy: {
-    title: 'Technical skills, organized for delivery.',
+    title: 'Technical skills for production backends.',
     subtitle:
-      'Clean groupings that reflect real-world execution: PHP backends, Drupal CMS, APIs, databases, and AWS cloud delivery.',
+      'Languages, frameworks, APIs, data stores, and cloud practices used to ship high-availability systems.',
   },
   experienceCopy: {
     title: 'Professional experience',
-    subtitle: 'Backend and CMS delivery across digital learning, enterprise apps, and production platforms.',
+    subtitle: 'Backend systems and distributed architecture across edtech, Fortune 500 CMS, and enterprise platforms.',
   },
   projectsCopy: {
-    title: 'Enterprise backends, CMS & learning platforms',
+    title: 'Key projects & systems architecture',
     subtitle:
-      'Selected platforms spanning banking, corporate CMS, edtech, and real estate — with ownership from architecture through production support.',
+      'Assessment engines, enterprise CMS, and GraphQL integration platforms — built for throughput, uptime, and scale.',
   },
   footer: {
-    tagline: 'Elite Senior PHP Developer · Laravel · Drupal · AWS',
+    tagline: 'Senior Software Engineer · Backend Systems & Distributed Architecture',
     copyrightName: fallback.profile.shortName,
   },
   navbar: { ctaLabel: "Let's Talk" },

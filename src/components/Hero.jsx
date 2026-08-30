@@ -7,7 +7,7 @@ import { IconGithub, IconLinkedIn, IconMail } from './Icons'
 
 const HeroScene = lazy(() => import('./HeroScene'))
 
-const FLOAT_TAGS = ['PHP', 'Drupal', 'Laravel', 'AWS', 'Backend']
+const FLOAT_TAGS = ['PHP', 'Zend', 'MongoDB', 'Laravel', 'APIs']
 
 export default function Hero() {
   const { profile, hero, settings } = useContent()
@@ -57,10 +57,10 @@ export default function Hero() {
                   href={profile.resumeUrl}
                   download={profile.resumeFileName || 'resume.pdf'}
                 >
-                  Download Resume
+                  Download CV
                 </a>
               ) : (
-                <a className="btn btn-primary" href="#contact">Download Resume</a>
+                <a className="btn btn-primary" href="#contact">Download CV</a>
               )}
               <a className="btn btn-ghost" href="#contact">Hire Me</a>
               <a className="btn btn-ghost" href="#projects">View Projects</a>

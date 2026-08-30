@@ -24,14 +24,13 @@ final class ContentSeeder
                 'name' => 'Shubham Tiwari',
                 'short_name' => 'Shubham Tiwari',
                 'initials' => 'ST',
-                'role' => 'Elite Senior PHP Developer',
-                'tagline' => '6+ years building high-performance backend systems, enterprise CMS platforms, and scalable web applications with PHP, Laravel, Drupal, and AWS.',
-                'stack_line' => 'PHP • Laravel • Drupal • AWS • REST APIs',
+                'role' => 'Senior Software Engineer',
+                'tagline' => '7+ years building high-throughput, fault-tolerant backend systems and distributed microservices with PHP, Laravel, Zend, Drupal, and cloud-native deployments.',
+                'stack_line' => 'PHP • Laravel • Zend • Drupal • MongoDB • AWS • REST / GraphQL',
                 'availability' => 'Open to new opportunities',
-                'location' => 'Bangalore, India',
-                'email' => 'ershubhamtiwari@yahoo.com',
+                'location' => 'Bengaluru, India',
+                'email' => 'shubhamtiwariforjob@gmail.com',
                 'phone' => '+91 86993 82375',
-                'phone_alt' => '+91 80909 15141',
             ], $report);
 
             self::seedSingleton($pdo, 'navbar', [
@@ -42,57 +41,57 @@ final class ContentSeeder
             self::replaceCollection($pdo, 'hero', 'cta', [
                 ['label' => 'Get In Touch', 'href' => '#contact', 'icon_key' => 'mail', 'style' => 'primary'],
                 ['label' => 'View Projects', 'href' => '#projects', 'icon_key' => 'monitor', 'style' => 'ghost'],
-                ['label' => 'LinkedIn', 'href' => 'https://www.linkedin.com/in/shubham-tiwari-35077193', 'icon_key' => 'linkedin', 'style' => 'ghost'],
+                ['label' => 'LinkedIn', 'href' => 'https://www.linkedin.com/in/shubham-tiwari', 'icon_key' => 'linkedin', 'style' => 'ghost'],
             ], $report);
 
             self::seedSingleton($pdo, 'about', [
                 'eyebrow' => 'About',
-                'title' => 'Experience summary',
-                'subtitle' => 'Backend-focused PHP engineering across enterprise CMS and scalable platforms.',
-                'leadership_title' => 'Backend & platform focus',
+                'title' => 'Backend systems & distributed architecture',
+                'subtitle' => 'Senior backend engineer focused on high-throughput services, data-tier modernization, and high availability.',
+                'leadership_title' => 'Professional summary',
                 'leadership_body' => json_encode([
-                    'I build high-performance backend systems and enterprise CMS platforms with a focus on reliability, security, and scale. My work spans PHP, Laravel, Drupal (7–10), REST APIs, GraphQL, and MySQL optimization.',
-                    'Experienced with AWS cloud infrastructure, CI/CD pipelines, and modern development practices to deliver robust digital platforms for large user bases and enterprise clients.',
+                    'Senior Software Engineer with 7+ years of core backend engineering experience building high-throughput, fault-tolerant enterprise web applications and distributed microservices.',
+                    'Proven expertise in PHP (7.x/8.x), modern MVC frameworks (Laravel, Zend, CodeIgniter), event-driven systems, caching strategies, and large-scale data tier modernization (MySQL to MongoDB). Strong background in OOP design, RESTful/GraphQL APIs, cloud-native deployments on AWS/Azure, CI/CD automation, and database query optimization.',
                 ], JSON_UNESCAPED_UNICODE),
                 'bring_title' => 'What I bring',
             ], $report);
 
             self::replaceCollection($pdo, 'about', 'stat', [
-                ['num' => '6+', 'label' => 'Years Experience'],
+                ['num' => '7+', 'label' => 'Years Experience'],
                 ['num' => '5', 'label' => 'Companies'],
-                ['num' => '4+', 'label' => 'Key Platforms'],
+                ['num' => '99.9%', 'label' => 'Availability Focus'],
             ], $report);
 
             self::replaceCollection($pdo, 'about', 'highlight', [
-                ['title' => 'Backend Architecture', 'desc' => 'Scalable PHP and Laravel services designed for performance, maintainability, and production reliability.'],
-                ['title' => 'Enterprise CMS', 'desc' => 'Drupal 7–10 platforms for corporate and enterprise clients, with custom modules and performance tuning.'],
-                ['title' => 'API & Integrations', 'desc' => 'REST APIs, GraphQL, OAuth2, and JWT enabling secure integrations across internal and external systems.'],
-                ['title' => 'Cloud & DevOps', 'desc' => 'AWS (EC2, S3, RDS, Lambda), Docker, and CI/CD pipelines for secure, scalable deployments.'],
+                ['title' => 'Backend Architecture', 'desc' => 'High-throughput PHP services, modular microservices, and fault-tolerant designs for enterprise workloads.'],
+                ['title' => 'Data Tier Modernization', 'desc' => 'Schema modernization, query indexing, and MySQL-to-MongoDB migrations that cut P99 read latency under peak traffic.'],
+                ['title' => 'APIs & Event Systems', 'desc' => 'RESTful and GraphQL contracts, caching layers, and event-driven integrations across web and mobile clients.'],
+                ['title' => 'Cloud & DevOps', 'desc' => 'AWS (EC2, S3, RDS, CloudWatch), Azure, Docker, and CI/CD pipelines that cut release overhead and build failures.'],
             ], $report);
 
             self::replaceCollection($pdo, 'about', 'bring_item', [
-                ['text' => 'High-performance PHP backend systems'],
-                ['text' => 'Enterprise CMS platforms with Drupal 7–10'],
-                ['text' => 'REST API & GraphQL design and integrations'],
-                ['text' => 'MySQL / PostgreSQL schema optimization'],
-                ['text' => 'AWS infrastructure, Docker & CI/CD delivery'],
+                ['text' => 'Distributed systems & microservices on PHP 8.x'],
+                ['text' => 'High-performance REST & GraphQL API design'],
+                ['text' => 'MySQL → MongoDB data-tier modernization'],
+                ['text' => 'Redis / Memcached caching for peak traffic'],
+                ['text' => 'AWS / Azure, Docker & CI/CD automation'],
             ], $report);
 
             self::seedSingleton($pdo, 'skills', [
-                'title' => 'Technical skills, organized for delivery.',
-                'subtitle' => 'Clean groupings that reflect real-world execution: PHP backends, Drupal CMS, APIs, databases, and AWS cloud delivery.',
+                'title' => 'Technical skills for production backends.',
+                'subtitle' => 'Languages, frameworks, APIs, data stores, and cloud practices used to ship high-availability systems.',
             ], $report);
 
             self::replaceCollection($pdo, 'skills', 'skill_group', [
-                ['title' => 'Languages', 'skills' => json_encode(['PHP', 'JavaScript'])],
-                ['title' => 'Frameworks & CMS', 'skills' => json_encode(['Laravel', 'Drupal (7/8/9/10)', 'CodeIgniter'])],
-                ['title' => 'Frontend', 'skills' => json_encode(['HTML5', 'CSS3', 'React', 'Bootstrap', 'jQuery'])],
-                ['title' => 'APIs & Auth', 'skills' => json_encode(['REST API', 'GraphQL', 'OAuth2', 'JWT'])],
-                ['title' => 'Databases', 'skills' => json_encode(['MySQL', 'PostgreSQL', 'NoSQL'])],
-                ['title' => 'Cloud & DevOps', 'skills' => json_encode(['AWS (EC2, S3, RDS, Lambda)', 'Docker', 'CI/CD', 'Jenkins', 'Git', 'GitHub', 'Composer'])],
+                ['title' => 'Languages & Backend', 'skills' => json_encode(['PHP (7.x/8.x)', 'Node.js', 'JavaScript (ES6+)', 'SQL', 'Core Java'])],
+                ['title' => 'Frameworks & CMS', 'skills' => json_encode(['Laravel', 'Zend Framework', 'CodeIgniter', 'Drupal (7–10)', 'WordPress'])],
+                ['title' => 'Architecture & APIs', 'skills' => json_encode(['Microservices', 'RESTful APIs', 'GraphQL', 'Redis', 'Memcached', 'Event-Driven'])],
+                ['title' => 'Databases & Storage', 'skills' => json_encode(['MySQL', 'MongoDB', 'Query Optimization', 'Schema Modernization'])],
+                ['title' => 'Cloud, DevOps & CI/CD', 'skills' => json_encode(['AWS (EC2, S3, RDS, CloudWatch)', 'Microsoft Azure', 'Docker', 'Git', 'CI/CD', 'Linux'])],
+                ['title' => 'Engineering Practices', 'skills' => json_encode(['System Design', 'TDD', 'PHPUnit', 'Agile/Scrum', 'Code Reviews', 'High Availability'])],
             ], $report);
 
-            $also = ['Agile','JIRA','Jenkins','Composer','GitHub','OAuth2','JWT','GraphQL','Lambda','RDS','S3','EC2'];
+            $also = ['Generators','Design Patterns','Connection Pooling','ActiveBatch','SOAP APIs','Webhooks','SOLID','Production Debugging'];
             self::replaceCollection(
                 $pdo,
                 'skills',
@@ -103,112 +102,109 @@ final class ContentSeeder
 
             self::seedSingleton($pdo, 'experience', [
                 'title' => 'Professional experience',
-                'subtitle' => 'Backend and CMS delivery across digital learning, enterprise apps, and production platforms.',
+                'subtitle' => 'Backend systems and distributed architecture across edtech, Fortune 500 CMS, and enterprise platforms.',
             ], $report);
 
             self::replaceCollection($pdo, 'experience', 'experience', [
                 [
-                    'role' => 'Software Engineer', 'company' => 'Allen Digital', 'period' => 'May 2025 — Present',
-                    'duration' => 'Present', 'type' => 'Full-time', 'location' => 'Bangalore, India',
+                    'role' => 'Senior Software Engineer', 'company' => 'ALLEN Digital', 'period' => 'May 2025 — Present',
+                    'duration' => 'Present', 'type' => 'Full-time', 'location' => 'Bengaluru, India',
                     'highlights' => json_encode([
-                        'Develop backend services supporting digital learning platforms used by large user bases.',
-                        'Improve platform reliability and scalability through backend system enhancements.',
-                        'Support integrations and system improvements for enterprise web platforms.',
+                        'Architected and scaled the backend for the enterprise Question Repository System serving high-concurrency educational workloads using PHP 8.x, Zend Framework, and modular microservices.',
+                        'Spearheaded data tier migration of unstructured exam assets from MySQL to MongoDB, reducing P99 read latencies by ~35% and improving concurrent database throughput under peak exam traffic.',
+                        'Designed and standardized high-performance RESTful API contracts with distributed caching layers (Redis/Memcached), maintaining 99.9% service availability across web and mobile platforms.',
+                        'Automated deployment workflows with Docker and CI/CD pipelines, decreasing release overhead and build failure rates by 40%.',
+                        'Collaborated with Product, Frontend, and DevOps in 2-week Agile sprints; authored technical design specs and led code reviews for backend modules.',
                     ]),
-                    'tech' => json_encode(['PHP', 'Laravel', 'MySQL', 'REST APIs', 'AWS']),
+                    'tech' => json_encode(['PHP 8.x', 'Zend', 'MongoDB', 'MySQL', 'Redis', 'Docker', 'CI/CD']),
                 ],
                 [
-                    'role' => 'Software Engineer', 'company' => 'Softtek', 'period' => 'May 2022 — Jan 2025',
-                    'duration' => '2 yrs 9 mos', 'type' => 'Full-time', 'location' => 'Bangalore, India',
+                    'role' => 'Senior Software Engineer', 'company' => 'Softtek', 'period' => 'May 2022 — Jan 2025',
+                    'duration' => '2 yrs 9 mos', 'type' => 'Full-time', 'location' => 'Bengaluru, India',
                     'highlights' => json_encode([
-                        'Developed enterprise web applications using PHP, Laravel, and Drupal CMS.',
-                        'Designed optimized database schemas improving application performance.',
-                        'Built REST APIs enabling integrations between internal and external enterprise systems.',
+                        'Engineered and maintained high-traffic enterprise platforms and custom PHP services on Drupal 8/9/10 for Fortune 500 corporate clients.',
+                        'Identified critical system bottlenecks and tuned complex MySQL queries, improving average page load performance by 30%.',
+                        'Integrated third-party enterprise REST/SOAP APIs, authentication layers, and webhooks within cloud-hosted environments (Microsoft Azure / AWS).',
+                        'Enforced strict coding standards, conducted peer reviews, and mentored junior engineers on SOLID principles and clean architecture.',
                     ]),
-                    'tech' => json_encode(['PHP', 'Laravel', 'Drupal', 'MySQL', 'REST APIs']),
+                    'tech' => json_encode(['Drupal 8/9/10', 'PHP', 'MySQL', 'REST/SOAP', 'Azure', 'AWS']),
                 ],
                 [
-                    'role' => 'Software Engineer', 'company' => 'Soroco India Pvt Ltd', 'period' => 'Sep 2021 — Jan 2022',
-                    'duration' => '5 mos', 'type' => 'Full-time', 'location' => 'Bangalore, India',
+                    'role' => 'Software Engineer', 'company' => 'Soroco India', 'period' => 'Sep 2021 — Jan 2022',
+                    'duration' => '5 mos', 'type' => 'Full-time', 'location' => 'Bengaluru, India',
                     'highlights' => json_encode([
-                        'Developed Drupal-based web applications for enterprise client projects.',
-                        'Built responsive web platforms using PHP, HTML, CSS, and JavaScript.',
+                        'Developed scalable transaction management and scheduling backend modules using Laravel and REST APIs.',
+                        'Implemented automated infrastructure deployment workflows and cloud asset management on AWS.',
                     ]),
-                    'tech' => json_encode(['PHP', 'Drupal', 'HTML5', 'CSS3', 'JavaScript']),
+                    'tech' => json_encode(['Laravel', 'REST APIs', 'AWS']),
                 ],
                 [
                     'role' => 'Software Engineer', 'company' => 'Erfolg', 'period' => 'Jul 2019 — Jul 2021',
-                    'duration' => '2 yrs', 'type' => 'Full-time', 'location' => 'Bangalore, India',
+                    'duration' => '2 yrs', 'type' => 'Full-time', 'location' => 'Chandigarh, India',
                     'highlights' => json_encode([
-                        'Developed custom backend applications and CMS-driven platforms.',
-                        'Collaborated with product teams to design scalable software solutions.',
+                        'Built core server-side business logic and normalized relational databases utilizing PHP and MySQL for high-volume management portals.',
+                        'Implemented secure API integrations and optimized SQL queries, reducing API response times under concurrent request loads.',
                     ]),
-                    'tech' => json_encode(['PHP', 'CMS', 'MySQL', 'JavaScript']),
+                    'tech' => json_encode(['PHP', 'MySQL', 'REST APIs']),
                 ],
                 [
                     'role' => 'Software Engineer', 'company' => 'Univisionz', 'period' => 'Dec 2017 — Jun 2019',
-                    'duration' => '1 yr 7 mos', 'type' => 'Full-time', 'location' => 'Chandigarh, India',
+                    'duration' => '1 yr 7 mos', 'type' => 'Full-time', 'location' => 'Mohali, India',
                     'highlights' => json_encode([
-                        'Built PHP-based websites and CMS systems including e-commerce platforms.',
-                        'Developed backend modules, payment integrations, and database structures.',
+                        'Developed custom WordPress CMS architectures, bespoke plugins, and reusable Core PHP backend components.',
+                        'Constructed asynchronous data pipelines with RESTful APIs, AJAX, and JavaScript for seamless frontend-backend integration.',
                     ]),
-                    'tech' => json_encode(['PHP', 'CMS', 'MySQL', 'E-commerce']),
+                    'tech' => json_encode(['WordPress', 'Core PHP', 'REST APIs', 'JavaScript']),
                 ],
             ], $report);
 
             self::replaceCollection($pdo, 'education', 'education', [
                 [
-                    'title' => 'B.Tech — Computer Science',
-                    'issuer' => 'Lovely Professional University · 2013 – 2017',
+                    'title' => 'B.Tech — Computer Science & Engineering',
+                    'issuer' => 'Punjab Technical University, Punjab, India · 2013 – 2017',
                 ],
             ], $report);
 
             self::seedSingleton($pdo, 'projects', [
-                'title' => 'Enterprise backends, CMS & learning platforms',
-                'subtitle' => 'Selected platforms spanning banking, corporate CMS, edtech, and real estate — with ownership from architecture through production support.',
-                'note' => 'Selected platform work spanning enterprise banking, corporate CMS, edtech, and real estate backends — with ownership across architecture, delivery, and production support.',
+                'title' => 'Key projects & systems architecture',
+                'subtitle' => 'Assessment engines, enterprise CMS, and GraphQL integration platforms — built for throughput, uptime, and scale.',
+                'note' => 'Key systems spanning assessment engines, Fortune 500 enterprise CMS, and GraphQL-backed digital asset platforms — with ownership across architecture, performance, and production reliability.',
             ], $report);
 
             self::replaceCollection($pdo, 'projects', 'project', [
                 [
-                    'title' => 'Targus Platform', 'category' => 'Enterprise Banking', 'badge' => 'Backend',
-                    'desc' => 'Enterprise banking backend platform built with PHP, SQL, and AWS for secure, scalable financial workflows.',
-                    'features' => json_encode(['Enterprise banking backend services', 'SQL-backed data architecture', 'AWS cloud infrastructure', 'Secure production delivery']),
-                    'tech' => json_encode(['PHP', 'SQL', 'AWS']),
+                    'title' => 'ALLEN Question Repository & Assessment Engine', 'category' => 'EdTech Backend', 'badge' => 'PHP 8',
+                    'desc' => 'Enterprise question repository managing millions of assessment records with high-throughput read paths and decoupled data ingestion pipelines.',
+                    'features' => json_encode(['Millions of assessment records at scale', 'High-throughput read paths', 'Decoupled data ingestion pipelines', 'MySQL + MongoDB hybrid data tier']),
+                    'tech' => json_encode(['PHP 8', 'Zend', 'MongoDB', 'MySQL', 'REST APIs', 'Docker']),
                 ],
                 [
-                    'title' => 'Wabteccorp.com', 'category' => 'Corporate CMS', 'badge' => 'Drupal',
-                    'desc' => 'Drupal-based corporate platform with optimized performance for enterprise content and web delivery.',
-                    'features' => json_encode(['Drupal CMS architecture', 'Corporate content platform', 'Performance optimization', 'Enterprise web delivery']),
-                    'tech' => json_encode(['Drupal', 'PHP', 'MySQL']),
+                    'title' => 'WabtecCorp Enterprise Platform', 'category' => 'Enterprise CMS', 'badge' => 'Drupal',
+                    'desc' => 'Enterprise content platform with resilient backend modules and cloud-hosted data workflows ensuring 99.9% uptime.',
+                    'features' => json_encode(['Drupal 9/10 enterprise CMS', 'Resilient backend modules', 'Cloud-hosted data workflows', '99.9% uptime focus']),
+                    'tech' => json_encode(['Drupal 9/10', 'PHP', 'Cloud Hosting', 'REST']),
                 ],
                 [
-                    'title' => 'Mindmygrades.com', 'category' => 'EdTech Platform', 'badge' => 'Core PHP',
-                    'desc' => 'Online learning platform backend built with Core PHP and MySQL, supporting digital education workflows.',
-                    'features' => json_encode(['Online learning backend', 'Core PHP application layer', 'MySQL data model', 'Student and content workflows']),
-                    'tech' => json_encode(['Core PHP', 'MySQL']),
-                ],
-                [
-                    'title' => 'Activeadultliving.com', 'category' => 'Real Estate', 'badge' => 'Backend',
-                    'desc' => 'Real estate platform backend serving US communities with content and listing-driven web experiences.',
-                    'features' => json_encode(['Real estate platform backend', 'Community-focused web delivery', 'US market platform support', 'Content and listing workflows']),
-                    'tech' => json_encode(['PHP', 'CMS', 'MySQL']),
+                    'title' => 'Browzwear 3D Integration Platform', 'category' => 'Digital Assets', 'badge' => 'GraphQL',
+                    'desc' => 'Unified data synchronization services integrating GraphQL endpoints with backend business modules for digital asset management.',
+                    'features' => json_encode(['GraphQL + REST synchronization', 'Digital asset management flows', 'Unified backend business modules', 'Relational DB integration']),
+                    'tech' => json_encode(['PHP', 'GraphQL', 'REST APIs', 'Relational DB']),
                 ],
             ], $report);
 
             self::seedSingleton($pdo, 'contact', [
                 'eyebrow' => 'Contact',
-                'title' => "Let's discuss backend systems, CMS platforms, and scalable PHP delivery.",
-                'subtitle' => 'Reach out via email, phone, or LinkedIn — clear communication and fast response. Open to senior PHP, Laravel, Drupal, and AWS-focused roles.',
+                'title' => "Let's discuss backend systems, distributed architecture, and scalable delivery.",
+                'subtitle' => 'Reach out via email, phone, or LinkedIn. Open to senior backend roles focused on PHP, microservices, data-tier modernization, and cloud-native delivery.',
                 'response_note' => 'Typically responds within 24 hours',
-                'response_body' => 'Open to senior PHP / Laravel / Drupal roles and complex backend or enterprise CMS engagements. Based in Bangalore, India.',
+                'response_body' => 'Open to Senior Software Engineer / backend systems roles. Based in Bengaluru, India.',
                 'form_title' => 'Send a message',
                 'success_title' => 'Message sent successfully!',
                 'success_body' => "I'll get back to you within 24 hours.",
             ], $report);
 
             self::seedSingleton($pdo, 'footer', [
-                'tagline' => 'Elite Senior PHP Developer · Laravel · Drupal · AWS',
+                'tagline' => 'Senior Software Engineer · Backend Systems & Distributed Architecture',
                 'copyright_name' => 'Shubham Tiwari',
             ], $report);
 
