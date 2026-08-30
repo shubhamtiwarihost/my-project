@@ -1,5 +1,6 @@
 import { lazy, Suspense, useMemo } from 'react'
 import { useContent } from '../context/ContentProvider'
+import { useIsCompactDevice } from '../hooks/useIsCompactDevice'
 import { usePointerParallax } from '../hooks/usePointerParallax'
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 import { IconGithub, IconLinkedIn, IconMail } from './Icons'
@@ -12,25 +13,28 @@ export default function Hero() {
   const { profile, hero, settings } = useContent()
   const photo = settings?.logo || hero?.backgroundUrl || null
   const reducedMotion = usePrefersReducedMotion()
-  const parallax = usePointerParallax(!reducedMotion)
+  const compact = useIsCompactDevice()
+  const enableScene = !reducedMotion && !compact
+  const enableParallax = enableScene
+  const parallax = usePointerParallax(enableParallax)
 
   const portraitStyle = useMemo(() => {
-    if (reducedMotion) return undefined
+    if (!enableParallax) return undefined
     return {
       transform: `rotateY(${parallax.x * 12}deg) rotateX(${-parallax.y * 10}deg) translateZ(24px)`,
     }
-  }, [parallax.x, parallax.y, reducedMotion])
+  }, [parallax.x, parallax.y, enableParallax])
 
   const copyStyle = useMemo(() => {
-    if (reducedMotion) return undefined
+    if (!enableParallax) return undefined
     return {
       transform: `translate3d(${parallax.x * -12}px, ${parallax.y * -8}px, 0)`,
     }
-  }, [parallax.x, parallax.y, reducedMotion])
+  }, [parallax.x, parallax.y, enableParallax])
 
   return (
-    <section id="home" className="hero-3d" aria-label="Introduction">
-      {!reducedMotion ? (
+    <section id="home" className={`hero-3d${compact ? ' hero-3d--compact' : ''}`} aria-label="Introduction">
+      {enableScene ? (
         <Suspense fallback={<div className="hero-scene hero-scene--fallback" />}>
           <HeroScene animate />
         </Suspense>

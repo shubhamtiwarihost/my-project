@@ -100,7 +100,7 @@ export default function Navbar() {
             ))}
           </nav>
           <div className="top-nav__actions">
-            <a href="#contact" className="btn btn-primary">{navbar.ctaLabel || 'Contact Me'}</a>
+            <a href="#contact" className="btn btn-primary top-nav__cta">{navbar.ctaLabel || 'Contact Me'}</a>
             <button
               type="button"
               className="top-nav__toggle"

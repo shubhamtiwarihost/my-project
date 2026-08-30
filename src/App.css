@@ -159,6 +159,14 @@
 
 @media (max-width: 900px) {
   .side-rail { display: none; }
+  .top-nav__cta { display: none; }
+  .top-nav__inner {
+    width: min(100% - 1.25rem, var(--max));
+  }
+  .top-nav__mobile {
+    overflow-y: auto;
+    -webkit-overflow-scrolling: touch;
+  }
 }
 
 /* ——— Hero 3D ——— */
@@ -782,13 +790,73 @@
 
   .hero-3d {
     min-height: auto;
-    padding-top: 2rem;
+    padding: 1.25rem 0 2rem;
+    overflow: hidden;
+  }
+
+  .hero-3d__content {
+    width: min(100% - 1.25rem, var(--max));
+  }
+
+  .hero-3d__grid {
+    gap: 1.75rem;
+  }
+
+  .hero-3d__copy {
+    transform: none !important;
+    text-align: left;
+  }
+
+  .hero-3d__name {
+    font-size: clamp(2.1rem, 11vw, 3.2rem);
+    word-break: break-word;
+  }
+
+  .hero-3d__stage {
+    width: 100%;
+    max-width: 280px;
+    margin-inline: auto;
+    order: -1;
+  }
+
+  .hero-3d__portrait-wrap {
+    width: 100%;
+    transform: none !important;
+  }
+
+  .hero-3d__portrait {
+    transform: none;
+    animation: none;
+  }
+
+  .hero-3d__float {
+    animation: none;
+    transform: none !important;
+    font-size: 0.7rem;
+    padding: 0.35rem 0.6rem;
+  }
+
+  .hero-3d__float--1 { top: 4%; left: 0; }
+  .hero-3d__float--2 { top: 18%; right: 0; }
+  .hero-3d__float--3 { bottom: 22%; left: 0; }
+  .hero-3d__float--4 { bottom: 8%; right: 0; }
+  .hero-3d__float--5 { top: 46%; right: -2%; }
+
+  .hero-scene {
+    position: absolute;
+    inset: 0;
+    min-height: 100%;
   }
 
   .hero-scene__veil {
     background:
-      linear-gradient(180deg, rgba(7, 9, 12, 0.55) 0%, rgba(7, 9, 12, 0.88) 70%),
-      linear-gradient(90deg, rgba(7, 9, 12, 0.7), rgba(7, 9, 12, 0.45));
+      linear-gradient(180deg, rgba(7, 9, 12, 0.72) 0%, rgba(7, 9, 12, 0.92) 100%),
+      linear-gradient(90deg, rgba(7, 9, 12, 0.85), rgba(7, 9, 12, 0.7));
+  }
+
+  .hero-3d--compact .hero-3d__grid {
+    display: flex;
+    flex-direction: column;
   }
 }
 
@@ -799,7 +867,26 @@
     grid-template-columns: 1fr;
   }
 
+  .hero-3d__actions {
+    flex-direction: column;
+    align-items: stretch;
+  }
+
   .hero-3d__actions .btn {
     width: 100%;
+  }
+
+  .hero-3d__stage {
+    max-width: 220px;
+  }
+
+  .section {
+    padding: 2.75rem 0;
+  }
+
+  .bento__card,
+  .resume-neo,
+  .contact-neo {
+    padding: 1.1rem;
   }
 }

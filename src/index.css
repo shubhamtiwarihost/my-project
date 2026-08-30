@@ -30,7 +30,10 @@
 
 * { box-sizing: border-box; }
 
-html { scroll-behavior: smooth; }
+html {
+  scroll-behavior: smooth;
+  overflow-x: clip;
+}
 
 body {
   margin: 0;
@@ -44,7 +47,11 @@ body {
     radial-gradient(720px 440px at 92% 8%, rgba(94, 234, 212, 0.08), transparent 50%),
     linear-gradient(180deg, #07090c 0%, #0a0f0d 50%, #07090c 100%);
   -webkit-font-smoothing: antialiased;
-  perspective: 1200px;
+  overflow-x: clip;
+}
+
+@media (min-width: 901px) {
+  body { perspective: 1200px; }
 }
 
 body::before {
@@ -69,7 +76,11 @@ button, input, textarea { font: inherit; color: inherit; }
 
 .app-shell {
   padding-left: var(--side-w);
-  transform-style: preserve-3d;
+  overflow-x: clip;
+}
+
+@media (min-width: 901px) {
+  .app-shell { transform-style: preserve-3d; }
 }
 
 .container {
@@ -194,6 +205,12 @@ button, input, textarea { font: inherit; color: inherit; }
   .app-shell { padding-left: 0; }
   .depth-panel:hover {
     transform: translateY(-3px);
+  }
+  .reveal {
+    transform: translateY(16px);
+  }
+  .reveal.is-visible {
+    transform: none;
   }
 }
 
