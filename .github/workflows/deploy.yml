@@ -60,6 +60,20 @@ jobs:
           print("DB password injected into admin config")
           PY
 
+      - name: Normalize FTP target dir
+        env:
+          RAW_DIR: ${{ secrets.FTP_TARGET_DIR }}
+        run: |
+          set -e
+          if [ -z "$RAW_DIR" ]; then
+            echo "Missing GitHub secret: FTP_TARGET_DIR"
+            exit 1
+          fi
+          # FTP-Deploy-Action requires server-dir to end with /
+          NORMALIZED="${RAW_DIR%/}/"
+          echo "FTP_SERVER_DIR=$NORMALIZED" >> "$GITHUB_ENV"
+          echo "Using server-dir ending with / (length=${#NORMALIZED})"
+
       - name: Deploy to Hostinger FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
@@ -69,7 +83,7 @@ jobs:
           protocol: ftp
           port: 21
           local-dir: ./deploy/
-          server-dir: ${{ secrets.FTP_TARGET_DIR }}
+          server-dir: ${{ env.FTP_SERVER_DIR }}
           # false = do not wipe existing media uploads on every deploy
           dangerous-clean-slate: false
           exclude: |
