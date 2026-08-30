@@ -1606,8 +1606,7 @@
 
 @media (max-width: 1000px) {
   .hero-3d__grid,
-  .bento,
-  .footer-neo__grid {
+  .bento {
     grid-template-columns: 1fr;
   }
 
