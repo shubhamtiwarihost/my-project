@@ -95,7 +95,6 @@ function createAmbientEngine() {
     if (!running) return
     const now = ctx.currentTime
     const beat = 1.15 // slow ambient pulse
-    const lookAhead = 3.2
     const chordIndex = Math.floor(step / 4) % chords.length
     const beatInBar = step % 4
 
