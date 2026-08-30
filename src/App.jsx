@@ -1,5 +1,6 @@
 import './App.css'
 import { ContentProvider, useContent } from './context/ContentProvider'
+import AmbientMusic from './components/AmbientMusic'
 import Navbar from './components/Navbar'
 import Hero from './components/Hero'
 import Stats from './components/Stats'
@@ -25,6 +26,7 @@ function PortfolioShell() {
   return (
     <div className="app-shell" data-content-status={status}>
       <Navbar />
+      <AmbientMusic />
       <main>
         <Hero />
         <Stats />
