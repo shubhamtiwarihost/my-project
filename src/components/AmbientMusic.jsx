@@ -3,6 +3,7 @@ import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 
 const STORAGE_KEY = 'portfolio-ambient-music'
 
+/** Soft ambient track: evolving chords + gentle melody (Web Audio). */
 function createAmbientEngine() {
   const Ctx = window.AudioContext || window.webkitAudioContext
   if (!Ctx) return null
@@ -12,39 +13,117 @@ function createAmbientEngine() {
   master.gain.value = 0
   master.connect(ctx.destination)
 
+  // Simple reverb-ish space
+  const delay = ctx.createDelay(1.5)
+  delay.delayTime.value = 0.42
+  const delayFeedback = ctx.createGain()
+  delayFeedback.gain.value = 0.28
+  const delayFilter = ctx.createBiquadFilter()
+  delayFilter.type = 'lowpass'
+  delayFilter.frequency.value = 1800
+  delay.connect(delayFilter)
+  delayFilter.connect(delayFeedback)
+  delayFeedback.connect(delay)
+  delayFilter.connect(master)
+
+  const wet = ctx.createGain()
+  wet.gain.value = 0.35
+  wet.connect(delay)
+
+  const dry = ctx.createGain()
+  dry.gain.value = 0.7
+  dry.connect(master)
+
+  const bus = ctx.createGain()
+  bus.gain.value = 1
+  bus.connect(dry)
+  bus.connect(wet)
+
   const filter = ctx.createBiquadFilter()
   filter.type = 'lowpass'
-  filter.frequency.value = 720
-  filter.Q.value = 0.65
-  filter.connect(master)
+  filter.frequency.value = 1400
+  filter.Q.value = 0.5
+  filter.connect(bus)
 
-  const makePad = (freq, type, level, detune = 0) => {
+  const timers = []
+  let running = false
+  let step = 0
+
+  // A minor ambient progression (Hz)
+  const chords = [
+    [220.0, 261.63, 329.63, 392.0], // Am
+    [174.61, 220.0, 261.63, 349.23], // F
+    [196.0, 246.94, 293.66, 392.0], // G
+    [130.81, 164.81, 196.0, 261.63], // Em
+  ]
+
+  const melody = [
+    523.25, 587.33, 659.25, 587.33,
+    523.25, 440.0, 392.0, 440.0,
+    493.88, 523.25, 587.33, 523.25,
+    440.0, 392.0, 349.23, 392.0,
+  ]
+
+  const playTone = (freq, when, dur, type, level, dest) => {
     const osc = ctx.createOscillator()
     const gain = ctx.createGain()
     osc.type = type
     osc.frequency.value = freq
-    osc.detune.value = detune
-    gain.gain.value = level
+    gain.gain.setValueAtTime(0.0001, when)
+    gain.gain.exponentialRampToValueAtTime(level, when + 0.08)
+    gain.gain.exponentialRampToValueAtTime(0.0001, when + dur)
     osc.connect(gain)
-    gain.connect(filter)
-    osc.start()
-    return osc
+    gain.connect(dest)
+    osc.start(when)
+    osc.stop(when + dur + 0.05)
   }
 
-  const oscillators = [
-    makePad(110, 'sine', 0.05),
-    makePad(164.81, 'triangle', 0.03, 5),
-    makePad(220, 'sine', 0.02, -3),
-    makePad(329.63, 'sine', 0.012, 2),
-  ]
+  const playChord = (freqs, when) => {
+    freqs.forEach((f, i) => {
+      playTone(f, when, 3.4, i % 2 === 0 ? 'sine' : 'triangle', i === 0 ? 0.045 : 0.028, filter)
+      // soft octave shimmer
+      playTone(f * 2, when + 0.05, 3.1, 'sine', 0.01, filter)
+    })
+  }
 
-  const lfo = ctx.createOscillator()
-  const lfoGain = ctx.createGain()
-  lfo.frequency.value = 0.07
-  lfoGain.gain.value = 160
-  lfo.connect(lfoGain)
-  lfoGain.connect(filter.frequency)
-  lfo.start()
+  const playMelodyNote = (freq, when) => {
+    playTone(freq, when, 1.35, 'sine', 0.055, filter)
+    playTone(freq * 2.01, when + 0.02, 1.1, 'triangle', 0.012, filter)
+  }
+
+  const scheduleLoop = () => {
+    if (!running) return
+    const now = ctx.currentTime
+    const beat = 1.15 // slow ambient pulse
+    const lookAhead = 3.2
+    const chordIndex = Math.floor(step / 4) % chords.length
+    const beatInBar = step % 4
+
+    const t = now + 0.08
+    if (beatInBar === 0) {
+      playChord(chords[chordIndex], t)
+      // soft bass root
+      playTone(chords[chordIndex][0] / 2, t, 3.2, 'sine', 0.06, filter)
+    }
+
+    // melody on beats 0 and 2 of each bar, sparse
+    if (beatInBar === 0 || beatInBar === 2) {
+      const note = melody[(Math.floor(step / 2) + chordIndex) % melody.length]
+      playMelodyNote(note, t + (beatInBar === 2 ? 0.2 : 0.45))
+    }
+
+    // light high sparkle occasionally
+    if (step % 8 === 3) {
+      playTone(880, t + 0.6, 1.8, 'sine', 0.012, filter)
+    }
+
+    step += 1
+    const id = window.setTimeout(scheduleLoop, beat * 1000)
+    timers.push(id)
+
+    // keep filter breathing
+    filter.frequency.setTargetAtTime(1100 + Math.sin(now * 0.15) * 280, now, 0.5)
+  }
 
   return {
     ctx,
@@ -53,19 +132,24 @@ function createAmbientEngine() {
       const now = ctx.currentTime
       master.gain.cancelScheduledValues(now)
       master.gain.setValueAtTime(master.gain.value, now)
-      master.gain.linearRampToValueAtTime(0.2, now + 1.6)
+      master.gain.linearRampToValueAtTime(0.55, now + 1.4)
+      if (!running) {
+        running = true
+        step = 0
+        scheduleLoop()
+      }
     },
     stop() {
+      running = false
+      while (timers.length) window.clearTimeout(timers.pop())
       const now = ctx.currentTime
       master.gain.cancelScheduledValues(now)
       master.gain.setValueAtTime(master.gain.value, now)
-      master.gain.linearRampToValueAtTime(0, now + 0.6)
+      master.gain.linearRampToValueAtTime(0, now + 0.7)
     },
     dispose() {
       try {
         this.stop()
-        oscillators.forEach((osc) => osc.stop())
-        lfo.stop()
         ctx.close()
       } catch {
         /* ignore */
@@ -187,7 +271,7 @@ export default function AmbientMusic() {
           <i /><i /><i />
         </span>
         <span className="ambient-music__label">
-          {waiting && enabled ? 'Tap for music' : enabled ? 'Sound on' : 'Sound off'}
+          {waiting && enabled ? 'Tap for music' : enabled ? 'Music on' : 'Music off'}
         </span>
       </button>
     </div>
