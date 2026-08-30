@@ -8,6 +8,7 @@ import {
   IconMonitor,
   IconSend,
 } from './Icons'
+import MobileAppBar, { InstallAppBanner } from './MobileAppShell'
 
 function NavIcon({ href }) {
   const id = href.replace('#', '')
@@ -92,6 +93,10 @@ export default function Navbar() {
 
       <header className={`top-nav ${scrolled ? 'is-scrolled' : ''}`}>
         <div className="top-nav__inner">
+          <a href="#home" className="top-nav__brand" aria-label="Home">
+            <span className="top-nav__brand-mark">{profile.initials}</span>
+            <span className="top-nav__brand-name">{profile.shortName || profile.name}</span>
+          </a>
           <nav className="top-nav__links" aria-label="Primary">
             {navLinks.map((link) => (
               <a key={link.href} href={link.href} className={active === link.href.slice(1) ? 'is-active' : undefined}>
@@ -124,6 +129,9 @@ export default function Navbar() {
           </a>
         </div>
       </header>
+
+      <MobileAppBar active={active} />
+      <InstallAppBanner />
     </>
   )
 }
