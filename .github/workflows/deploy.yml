@@ -65,14 +65,18 @@ jobs:
           RAW_DIR: ${{ secrets.FTP_TARGET_DIR }}
         run: |
           set -e
-          if [ -z "$RAW_DIR" ]; then
-            echo "Missing GitHub secret: FTP_TARGET_DIR"
-            exit 1
+          # Hostinger FTP logins usually start already inside public_html.
+          # Using "public_html/" would upload to public_html/public_html/ and miss the live site.
+          dir="${RAW_DIR:-./}"
+          trimmed="${dir#/}"
+          trimmed="${trimmed%/}"
+          if [ -z "$trimmed" ] || [ "$trimmed" = "." ] || [ "$trimmed" = "public_html" ]; then
+            NORMALIZED="./"
+          else
+            NORMALIZED="${trimmed}/"
           fi
-          # FTP-Deploy-Action requires server-dir to end with /
-          NORMALIZED="${RAW_DIR%/}/"
           echo "FTP_SERVER_DIR=$NORMALIZED" >> "$GITHUB_ENV"
-          echo "Using server-dir ending with / (length=${#NORMALIZED})"
+          echo "Using server-dir='$NORMALIZED' (from secret length=${#RAW_DIR})"
 
       - name: Deploy to Hostinger FTP
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
@@ -94,3 +98,19 @@ jobs:
             admin/storage/uploads/documents/**
             admin/storage/uploads/backups/**
             **/.DS_Store
+            public_html/**
+            public_html/**/**
+
+      - name: Verify live site assets
+        run: |
+          set -e
+          html="$(curl -fsSL "https://shubhamprofile.info/")"
+          if echo "$html" | grep -q '/techbio/assets/'; then
+            echo "Live index.html still points at /techbio/assets/ — FTP target is wrong."
+            exit 1
+          fi
+          if ! echo "$html" | grep -q '/assets/index-'; then
+            echo "Live index.html missing /assets/ bundle — deploy did not update the site root."
+            exit 1
+          fi
+          echo "Live site index references /assets/ (ok)"
