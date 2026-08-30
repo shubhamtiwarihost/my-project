@@ -14,7 +14,12 @@ $allow = [
     'http://127.0.0.1:5173',
     'http://localhost:4173',
 ];
-if ($origin !== '' && (in_array($origin, $allow, true) || str_ends_with(parse_url($origin, PHP_URL_HOST) ?: '', 'gyaando.com'))) {
+$host = parse_url($origin, PHP_URL_HOST) ?: '';
+$allowedHost = $host !== '' && (
+    str_ends_with($host, 'gyaando.com')
+    || str_ends_with($host, 'shubhamprofile.info')
+);
+if ($origin !== '' && (in_array($origin, $allow, true) || $allowedHost)) {
     header('Access-Control-Allow-Origin: ' . $origin);
     header('Access-Control-Allow-Credentials: true');
 } else {

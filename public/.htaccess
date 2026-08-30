@@ -1,0 +1,13 @@
+DirectoryIndex index.html index.php
+
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+
+  # Do not rewrite real files/folders (assets, api, admin, etc.)
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
+
+  # SPA fallback for client-side routes
+  RewriteRule ^ index.html [L]
+</IfModule>

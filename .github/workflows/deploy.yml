@@ -23,8 +23,8 @@ jobs:
 
       - name: Build Project
         env:
-          VITE_API_BASE: https://gyaando.com/techbio/api
-        run: npx vite build --base=/techbio/
+          VITE_API_BASE: https://shubhamprofile.info/api
+        run: npx vite build --base=/
 
       - name: Prepare deploy package
         env:
