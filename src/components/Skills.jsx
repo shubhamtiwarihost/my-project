@@ -1,15 +1,9 @@
-import { useMemo } from 'react'
 import { useContent } from '../context/ContentProvider'
 import { useInView } from '../hooks/useInView'
 
 export default function Skills() {
-  const { skillGroups, alsoUsed, skillsCopy } = useContent()
+  const { skillGroups, skillsCopy } = useContent()
   const [ref, visible] = useInView()
-
-  const allTech = useMemo(() => {
-    const fromGroups = (skillGroups || []).flatMap((g) => g.skills || [])
-    return [...new Set([...fromGroups, ...(alsoUsed || [])])]
-  }, [skillGroups, alsoUsed])
 
   return (
     <section id="skills" className="section section--tint skills-section">
@@ -33,18 +27,6 @@ export default function Skills() {
               </div>
             </article>
           ))}
-        </div>
-
-        <div className="also-used glass depth-panel">
-          <h3>All technologies</h3>
-          <p className="also-used__note">Full stack from languages to cloud and engineering practices.</p>
-          <div className="skill-group__tags skill-group__tags--all">
-            {allTech.map((item) => (
-              <span key={item} className="tag tag--skill">
-                {item}
-              </span>
-            ))}
-          </div>
         </div>
       </div>
     </section>
