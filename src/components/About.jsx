@@ -55,7 +55,7 @@ export default function About() {
             </div>
           </article>
 
-          <article id="skills" className="bento__card glass depth-panel" style={{ scrollMarginTop: '90px' }}>
+          <article className="bento__card glass depth-panel" style={{ scrollMarginTop: '90px' }}>
             <h3>My Skills</h3>
             <div className="skill-bars">
               {bars.map((skill) => (

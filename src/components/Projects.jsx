@@ -1,4 +1,4 @@
-import { useCallback, useMemo, useRef, useState } from 'react'
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useContent } from '../context/ContentProvider'
 import { useInView } from '../hooks/useInView'
 import { useIsCompactDevice } from '../hooks/useIsCompactDevice'
@@ -12,7 +12,7 @@ function panelTransform(offset, enabled) {
   if (!enabled) return undefined
   const abs = Math.abs(offset)
   return {
-    transform: `translateX(${offset * 210}px) translateZ(${offset * -140}px) rotateY(${offset * -18}deg) scale(${1 - abs * 0.08})`,
+    transform: `translateX(${offset * 260}px) translateZ(${offset * -160}px) rotateY(${offset * -18}deg) scale(${1 - abs * 0.07})`,
     opacity: Math.max(0.35, 1 - abs * 0.22),
     zIndex: 20 - abs,
     filter: abs ? `blur(${abs * 0.55}px)` : 'none',
@@ -23,10 +23,12 @@ export default function Projects() {
   const { projects, projectsCopy } = useContent()
   const [ref, visible] = useInView({ threshold: 0.08 })
   const stageRef = useRef(null)
+  const hoverSideRef = useRef(0)
   const compact = useIsCompactDevice()
   const reducedMotion = usePrefersReducedMotion()
   const [active, setActive] = useState(0)
   const [tilt, setTilt] = useState({ x: 0, y: 0 })
+  const [hovering, setHovering] = useState(false)
 
   const safeProjects = projects?.length ? projects : []
   const spatial = !compact && !reducedMotion
@@ -34,17 +36,48 @@ export default function Projects() {
     ? Math.min(active, safeProjects.length - 1)
     : 0
 
+  const go = useCallback((dir) => {
+    if (!safeProjects.length) return
+    setActive((prev) => {
+      const current = Math.min(prev, safeProjects.length - 1)
+      return (current + dir + safeProjects.length) % safeProjects.length
+    })
+  }, [safeProjects.length])
+
   const onPointerMove = useCallback((e) => {
-    if (!spatial || !stageRef.current) return
+    if (!stageRef.current) return
     const rect = stageRef.current.getBoundingClientRect()
     const x = ((e.clientX - rect.left) / rect.width) * 2 - 1
     const y = ((e.clientY - rect.top) / rect.height) * 2 - 1
-    setTilt({ x, y })
+    if (spatial) setTilt({ x, y })
+
+    // Left / right edge of the stage drives slide direction while hovering
+    if (x < -0.25) hoverSideRef.current = -1
+    else if (x > 0.25) hoverSideRef.current = 1
+    else hoverSideRef.current = 1
   }, [spatial])
 
-  const onPointerLeave = useCallback(() => {
-    setTilt({ x: 0, y: 0 })
+  const onPointerEnter = useCallback(() => {
+    setHovering(true)
   }, [])
+
+  const onPointerLeave = useCallback(() => {
+    setHovering(false)
+    setTilt({ x: 0, y: 0 })
+    hoverSideRef.current = 0
+  }, [])
+
+  useEffect(() => {
+    if (reducedMotion || safeProjects.length < 2) return undefined
+    // Desktop: auto-slide while hovering. Mobile: auto-slide while section is on screen.
+    const shouldRun = hovering || (compact && visible)
+    if (!shouldRun) return undefined
+    const id = window.setInterval(() => {
+      const dir = hoverSideRef.current || 1
+      go(dir)
+    }, compact ? 2800 : 1800)
+    return () => window.clearInterval(id)
+  }, [hovering, compact, visible, reducedMotion, safeProjects.length, go])
 
   const stageStyle = useMemo(() => {
     if (!spatial) return undefined
@@ -52,14 +85,6 @@ export default function Projects() {
       transform: `rotateX(${8 - tilt.y * 6}deg) rotateY(${tilt.x * 10}deg)`,
     }
   }, [tilt, spatial])
-
-  const go = (dir) => {
-    if (!safeProjects.length) return
-    setActive((prev) => {
-      const current = Math.min(prev, safeProjects.length - 1)
-      return (current + dir + safeProjects.length) % safeProjects.length
-    })
-  }
 
   return (
     <section id="projects" className="section projects-3d-section">
@@ -73,9 +98,13 @@ export default function Projects() {
         <div
           className={`projects-3d${compact ? ' projects-3d--compact' : ''}${reducedMotion ? ' projects-3d--static' : ''}`}
           ref={stageRef}
+          onPointerEnter={onPointerEnter}
           onPointerMove={onPointerMove}
           onPointerLeave={onPointerLeave}
         >
+          <p className="projects-3d__hint" aria-hidden="true">
+            Hover to auto-slide · move left / right to change direction
+          </p>
           <div className="projects-3d__glow" aria-hidden="true" />
           <div className="projects-3d__floor" aria-hidden="true" />
 
@@ -88,7 +117,6 @@ export default function Projects() {
                   key={project.title}
                   className={`project-3d${isActive ? ' is-active' : ''}`}
                   style={panelTransform(offset, spatial)}
-                  onMouseEnter={() => spatial && setActive(index)}
                   onFocus={() => setActive(index)}
                   onClick={() => setActive(index)}
                   tabIndex={0}
@@ -134,9 +162,6 @@ export default function Projects() {
           </div>
 
           <div className="projects-3d__controls" aria-label="Project navigation">
-            <button type="button" className="projects-3d__nav" onClick={() => go(-1)} aria-label="Previous project">
-              ‹
-            </button>
             <div className="projects-3d__dots">
               {safeProjects.map((project, index) => (
                 <button
@@ -149,9 +174,6 @@ export default function Projects() {
                 />
               ))}
             </div>
-            <button type="button" className="projects-3d__nav" onClick={() => go(1)} aria-label="Next project">
-              ›
-            </button>
           </div>
         </div>
       </div>

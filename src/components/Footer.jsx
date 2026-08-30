@@ -1,10 +1,14 @@
+import { useMemo } from 'react'
 import { useContent } from '../context/ContentProvider'
 import { IconGithub, IconLinkedIn, IconMail } from './Icons'
 
 export default function Footer() {
   const { navLinks, profile, footer, alsoUsed, skillGroups } = useContent()
   const year = new Date().getFullYear()
-  const tech = (alsoUsed?.length ? alsoUsed : skillGroups.flatMap((g) => g.skills || [])).slice(0, 10)
+  const tech = useMemo(() => {
+    const fromGroups = (skillGroups || []).flatMap((g) => g.skills || [])
+    return [...new Set([...fromGroups, ...(alsoUsed || [])])]
+  }, [skillGroups, alsoUsed])
 
   return (
     <footer className="footer-neo">
