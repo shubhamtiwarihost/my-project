@@ -27,7 +27,7 @@ export default function About() {
     <section id="about" className="section">
       <div className={`container reveal ${visible ? 'is-visible' : ''}`} ref={ref}>
         <div className="bento">
-          <article className="bento__card glass about-neo">
+          <article className="bento__card glass depth-panel about-neo">
             <h3>About Me</h3>
             {about.leadershipBody?.slice(0, 2).map((para) => (
               <p key={para.slice(0, 28)}>{para}</p>
@@ -42,7 +42,7 @@ export default function About() {
             </div>
           </article>
 
-          <article id="experience" className="bento__card glass" style={{ scrollMarginTop: '90px' }}>
+          <article id="experience" className="bento__card glass depth-panel" style={{ scrollMarginTop: '90px' }}>
             <h3>Experience</h3>
             <div className="timeline">
               {experiences.map((exp) => (
@@ -55,7 +55,7 @@ export default function About() {
             </div>
           </article>
 
-          <article id="skills" className="bento__card glass" style={{ scrollMarginTop: '90px' }}>
+          <article id="skills" className="bento__card glass depth-panel" style={{ scrollMarginTop: '90px' }}>
             <h3>My Skills</h3>
             <div className="skill-bars">
               {bars.map((skill) => (

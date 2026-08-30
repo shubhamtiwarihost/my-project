@@ -39,7 +39,7 @@ export default function Contact() {
     <section id="contact" className="section">
       <div className={`container reveal ${visible ? 'is-visible' : ''}`} ref={ref}>
         <div className="split-2">
-          <article className="resume-neo glass">
+          <article className="resume-neo glass depth-panel">
             <p className="eyebrow">Resume</p>
             <h2 className="section-title" style={{ fontSize: '1.45rem' }}>Resume Preview</h2>
             <div className="resume-neo__preview">
@@ -66,7 +66,7 @@ export default function Contact() {
             </div>
           </article>
 
-          <article className="contact-neo glass">
+          <article className="contact-neo glass depth-panel">
             <p className="eyebrow">{contactCopy.eyebrow || 'Contact'}</p>
             <h2 className="section-title" style={{ fontSize: '1.45rem' }}>Get In Touch</h2>
             <p className="section-subtitle" style={{ marginBottom: '1.1rem' }}>{contactCopy.subtitle}</p>

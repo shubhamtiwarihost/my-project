@@ -1,23 +1,52 @@
+import { lazy, Suspense, useMemo } from 'react'
 import { useContent } from '../context/ContentProvider'
+import { usePointerParallax } from '../hooks/usePointerParallax'
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 import { IconGithub, IconLinkedIn, IconMail } from './Icons'
+
+const HeroScene = lazy(() => import('./HeroScene'))
 
 const FLOAT_TAGS = ['PHP', 'Drupal', 'Laravel', 'AWS', 'Backend']
 
 export default function Hero() {
   const { profile, hero, settings } = useContent()
   const photo = settings?.logo || hero?.backgroundUrl || null
+  const reducedMotion = usePrefersReducedMotion()
+  const parallax = usePointerParallax(!reducedMotion)
+
+  const portraitStyle = useMemo(() => {
+    if (reducedMotion) return undefined
+    return {
+      transform: `rotateY(${parallax.x * 12}deg) rotateX(${-parallax.y * 10}deg) translateZ(24px)`,
+    }
+  }, [parallax.x, parallax.y, reducedMotion])
+
+  const copyStyle = useMemo(() => {
+    if (reducedMotion) return undefined
+    return {
+      transform: `translate3d(${parallax.x * -12}px, ${parallax.y * -8}px, 0)`,
+    }
+  }, [parallax.x, parallax.y, reducedMotion])
 
   return (
-    <section id="home" className="hero-neo section" aria-label="Introduction">
-      <div className="container">
-        <div className="hero-neo__grid">
-          <div>
-            <p className="hero-neo__hello">Hello, I&apos;m</p>
-            <h1 className="hero-neo__name">{profile.name}</h1>
-            <p className="hero-neo__role">{profile.role}</p>
-            <p className="hero-neo__stack">{profile.stackLine}</p>
+    <section id="home" className="hero-3d" aria-label="Introduction">
+      {!reducedMotion ? (
+        <Suspense fallback={<div className="hero-scene hero-scene--fallback" />}>
+          <HeroScene animate />
+        </Suspense>
+      ) : (
+        <div className="hero-scene hero-scene--fallback" aria-hidden="true" />
+      )}
 
-            <div className="hero-neo__actions">
+      <div className="hero-3d__content container">
+        <div className="hero-3d__grid">
+          <div className="hero-3d__copy" style={copyStyle}>
+            <p className="hero-3d__hello">Hello, I&apos;m</p>
+            <h1 className="hero-3d__name">{profile.name}</h1>
+            <p className="hero-3d__role">{profile.role}</p>
+            <p className="hero-3d__stack">{profile.stackLine}</p>
+
+            <div className="hero-3d__actions">
               {profile.resumeUrl ? (
                 <a
                   className="btn btn-primary"
@@ -33,7 +62,7 @@ export default function Hero() {
               <a className="btn btn-ghost" href="#projects">View Projects</a>
             </div>
 
-            <div className="hero-neo__follow">
+            <div className="hero-3d__follow">
               <span>Follow Me</span>
               {profile.linkedin && (
                 <a href={profile.linkedin} target="_blank" rel="noopener noreferrer" aria-label="LinkedIn">
@@ -49,19 +78,21 @@ export default function Hero() {
             </div>
           </div>
 
-          <div className="hero-neo__portrait-wrap" aria-hidden="true">
-            <div className="hero-neo__portrait">
-              <div className="hero-neo__portrait-inner">
-                {photo ? (
-                  <img src={photo} alt="" />
-                ) : (
-                  <span className="hero-neo__avatar-fallback">{profile.initials}</span>
-                )}
+          <div className="hero-3d__stage" aria-hidden="true">
+            <div className="hero-3d__portrait-wrap" style={portraitStyle}>
+              <div className="hero-3d__portrait">
+                <div className="hero-3d__portrait-inner">
+                  {photo ? (
+                    <img src={photo} alt="" />
+                  ) : (
+                    <span className="hero-3d__avatar-fallback">{profile.initials}</span>
+                  )}
+                </div>
               </div>
+              {FLOAT_TAGS.map((tag, i) => (
+                <span key={tag} className={`hero-3d__float hero-3d__float--${i + 1}`}>{tag}</span>
+              ))}
             </div>
-            {FLOAT_TAGS.map((tag, i) => (
-              <span key={tag} className={`hero-neo__float hero-neo__float--${i + 1}`}>{tag}</span>
-            ))}
           </div>
         </div>
       </div>

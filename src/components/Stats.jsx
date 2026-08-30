@@ -25,7 +25,7 @@ export default function Stats() {
       <div className={`container reveal ${visible ? 'is-visible' : ''}`} ref={ref}>
         <div className="stats-neo">
           {cards.slice(0, 4).map((stat) => (
-            <article key={stat.label} className="stat-neo glass">
+            <article key={stat.label} className="stat-neo glass depth-panel">
               <div className="stat-neo__num">{stat.num}</div>
               <div className="stat-neo__label">{stat.label}</div>
             </article>

@@ -6,7 +6,6 @@ import {
   IconMail,
   IconMenu,
   IconMonitor,
-  IconPhone,
   IconSend,
 } from './Icons'
 

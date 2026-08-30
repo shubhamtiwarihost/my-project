@@ -16,7 +16,7 @@ export default function Projects() {
 
         <div className="projects-neo">
           {projects.map((project) => (
-            <article key={project.title} className="project-neo glass">
+            <article key={project.title} className="project-neo glass depth-panel">
               <div className="project-neo__media" aria-hidden="true">
                 {(project.title || '?').slice(0, 2).toUpperCase()}
               </div>
