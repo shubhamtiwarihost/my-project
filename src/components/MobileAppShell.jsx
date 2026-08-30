@@ -4,9 +4,36 @@ import { IconMail, IconMonitor } from './Icons'
 
 const TAB_HREFS = ['#home', '#about', '#projects', '#contact']
 
+function getInstallBannerDefaults() {
+  if (typeof window === 'undefined') {
+    return { standalone: true, visible: false, iosHint: false }
+  }
+  const standalone =
+    window.matchMedia('(display-mode: standalone)').matches
+    || window.navigator.standalone === true
+  if (standalone) {
+    return { standalone: true, visible: false, iosHint: false }
+  }
+  const dismissed = sessionStorage.getItem('install-banner-dismissed') === '1'
+  if (dismissed) {
+    return { standalone: false, visible: false, iosHint: false }
+  }
+  const ua = window.navigator.userAgent || ''
+  const isIos = /iPhone|iPad|iPod/i.test(ua)
+  const isSafari = /Safari/i.test(ua) && !/CriOS|FxiOS|EdgiOS/i.test(ua)
+  const narrow = window.matchMedia('(max-width: 900px)').matches
+  if (isIos && isSafari) {
+    return { standalone: false, visible: true, iosHint: true }
+  }
+  if (!isIos && narrow) {
+    return { standalone: false, visible: true, iosHint: false }
+  }
+  return { standalone: false, visible: false, iosHint: false }
+}
+
 function TabIcon({ href, active }) {
-  const id = href.replace('#', '')
   const stroke = active ? 'currentColor' : 'currentColor'
+  const id = href.replace('#', '')
   if (id === 'home') {
     return (
       <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke={stroke} strokeWidth="2">
@@ -31,8 +58,7 @@ export default function MobileAppBar({ active }) {
   const { navLinks } = useContent()
 
   const tabs = useMemo(() => {
-    const wanted = TAB_HREFS
-    const fromCms = navLinks.filter((l) => wanted.includes(l.href))
+    const fromCms = navLinks.filter((l) => TAB_HREFS.includes(l.href))
     if (fromCms.length >= 3) return fromCms
     return [
       { label: 'Home', href: '#home' },
@@ -64,38 +90,23 @@ export default function MobileAppBar({ active }) {
 }
 
 export function InstallAppBanner() {
-  const [visible, setVisible] = useState(false)
+  const defaults = useMemo(() => getInstallBannerDefaults(), [])
+  const [visible, setVisible] = useState(defaults.visible)
   const [deferred, setDeferred] = useState(null)
-  const [iosHint, setIosHint] = useState(false)
-  const standalone = typeof window !== 'undefined' && (
-    window.matchMedia('(display-mode: standalone)').matches
-    || window.navigator.standalone === true
-  )
+  const [iosHint, setIosHint] = useState(defaults.iosHint)
+  const standalone = defaults.standalone
 
   useEffect(() => {
     if (standalone) return undefined
 
-    const dismissed = sessionStorage.getItem('install-banner-dismissed') === '1'
-    const ua = window.navigator.userAgent || ''
-    const isIos = /iPhone|iPad|iPod/i.test(ua)
-    const isSafari = /Safari/i.test(ua) && !/CriOS|FxiOS|EdgiOS/i.test(ua)
-
     const onPrompt = (e) => {
       e.preventDefault()
       setDeferred(e)
-      if (!dismissed) setVisible(true)
+      if (sessionStorage.getItem('install-banner-dismissed') !== '1') {
+        setVisible(true)
+      }
     }
     window.addEventListener('beforeinstallprompt', onPrompt)
-
-    if (!dismissed && isIos && isSafari) {
-      setIosHint(true)
-      setVisible(true)
-    } else if (!dismissed && !isIos) {
-      // Show soft tip on mobile Chrome until install event arrives
-      const narrow = window.matchMedia('(max-width: 900px)').matches
-      if (narrow) setVisible(true)
-    }
-
     return () => window.removeEventListener('beforeinstallprompt', onPrompt)
   }, [standalone])
 
@@ -114,7 +125,6 @@ export function InstallAppBanner() {
       dismiss()
       return
     }
-    // iOS: keep banner showing instructions
     setIosHint(true)
   }
 
