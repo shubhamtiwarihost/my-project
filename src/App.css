@@ -1828,9 +1828,9 @@
 }
 
 .footer-neo {
-  margin-top: 2rem;
+  margin-top: 1rem;
   border-top: 1px solid var(--line);
-  padding: 2.25rem 0 1.75rem;
+  padding: 1.75rem 0 1.35rem;
   background:
     linear-gradient(180deg, rgba(184, 240, 0, 0.04), transparent 40%),
     rgba(0, 0, 0, 0.32);
