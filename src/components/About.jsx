@@ -1,76 +1,86 @@
 import { useContent } from '../context/ContentProvider'
 import { useInView } from '../hooks/useInView'
+import { useIsCompactDevice } from '../hooks/useIsCompactDevice'
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
+import { useStageTilt } from '../hooks/useStageTilt'
 import { IconLinkedIn, IconPhone } from './Icons'
 
-const LEVELS = {
-  PHP: 95,
-  Laravel: 90,
-  Drupal: 90,
-  MySQL: 95,
-  AWS: 85,
-  JavaScript: 80,
-}
-
 export default function About() {
-  const { about, profile, experiences, skillGroups } = useContent()
+  const { about, profile } = useContent()
   const [ref, visible] = useInView()
+  const compact = useIsCompactDevice()
+  const reducedMotion = usePrefersReducedMotion()
+  const spatial = !compact && !reducedMotion
+  const [stageRef, stageStyle, onStageMove, onStageLeave] = useStageTilt(spatial)
 
-  const skillBars = Object.entries(LEVELS).map(([name, level]) => ({ name, level }))
-  // Prefer skills from CMS groups if present
-  const flatSkills = skillGroups.flatMap((g) => g.skills || [])
-  const bars = skillBars.map((s) => ({
-    ...s,
-    level: flatSkills.some((x) => x.toLowerCase().includes(s.name.toLowerCase())) ? s.level : s.level,
-  }))
+  const highlights = about.highlights?.length
+    ? about.highlights
+    : []
 
   return (
-    <section id="about" className="section">
+    <section id="about" className="section about-3d-section">
       <div className={`container reveal ${visible ? 'is-visible' : ''}`} ref={ref}>
-        <div className="bento">
-          <article className="bento__card glass depth-panel about-neo">
-            <h3>About Me</h3>
-            {about.leadershipBody?.slice(0, 2).map((para) => (
-              <p key={para.slice(0, 28)}>{para}</p>
-            ))}
-            <div className="about-neo__meta">
-              <div><strong>Location</strong><span>{profile.location}</span></div>
-              <div><strong>Email</strong><span><a href={profile.emailMailto}>{profile.email}</a></span></div>
-              <div><IconPhone size={14} /><span>{profile.phone}</span></div>
-              {profile.linkedin && (
-                <div><IconLinkedIn size={14} /><span><a href={profile.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn Profile </a></span></div>
-              )}
-            </div>
-          </article>
+        <header className="section-head">
+          <p className="eyebrow">{about.eyebrow || 'About'}</p>
+          <h2 className="section-title">{about.title}</h2>
+          <p className="section-subtitle">{about.subtitle}</p>
+        </header>
 
-          <article id="experience" className="bento__card glass depth-panel" style={{ scrollMarginTop: '90px' }}>
-            <h3>Experience</h3>
-            <div className="timeline">
-              {experiences.map((exp) => (
-                <div key={`${exp.company}-${exp.period}`} className="timeline__item">
-                  <p className="timeline__role">{exp.role}</p>
-                  <p className="timeline__meta">{exp.company}</p>
-                  <p className="timeline__period">{exp.period} · {exp.location}</p>
+        <div
+          className={`about-3d${spatial ? '' : ' about-3d--flat'}`}
+          ref={stageRef}
+          onPointerMove={onStageMove}
+          onPointerLeave={onStageLeave}
+        >
+          <div className="about-3d__glow" aria-hidden="true" />
+          <div className="about-3d__floor" aria-hidden="true" />
+
+          <div className="about-3d__stage" style={stageStyle}>
+            <article className="about-3d__panel about-3d__panel--main">
+              <div className="about-3d__face">
+                <p className="eyebrow">{about.leadershipTitle || 'Summary'}</p>
+                <h3 className="about-3d__title">About Me</h3>
+                {about.leadershipBody?.slice(0, 2).map((para) => (
+                  <p key={para.slice(0, 32)} className="about-3d__body">{para}</p>
+                ))}
+                <div className="about-3d__meta">
+                  <div><strong>Location</strong><span>{profile.location}</span></div>
+                  <div><strong>Email</strong><span><a href={profile.emailMailto}>{profile.email}</a></span></div>
+                  <div><IconPhone size={14} /><span>{profile.phone}</span></div>
+                  {profile.linkedin && (
+                    <div>
+                      <IconLinkedIn size={14} />
+                      <span>
+                        <a href={profile.linkedin} target="_blank" rel="noopener noreferrer">LinkedIn</a>
+                      </span>
+                    </div>
+                  )}
                 </div>
+                {about.bringItems?.length ? (
+                  <ul className="about-3d__bring">
+                    {about.bringItems.slice(0, 5).map((item) => (
+                      <li key={item}>{item}</li>
+                    ))}
+                  </ul>
+                ) : null}
+              </div>
+            </article>
+
+            <div className="about-3d__highlights">
+              {highlights.map((item, i) => (
+                <article
+                  key={item.id || item.title}
+                  className="about-3d__chip"
+                  style={spatial ? { '--i': i } : undefined}
+                >
+                  <div className="about-3d__face about-3d__face--chip">
+                    <h4>{item.title}</h4>
+                    <p>{item.desc}</p>
+                  </div>
+                </article>
               ))}
             </div>
-          </article>
-
-          <article className="bento__card glass depth-panel" style={{ scrollMarginTop: '90px' }}>
-            <h3>My Skills</h3>
-            <div className="skill-bars">
-              {bars.map((skill) => (
-                <div key={skill.name}>
-                  <div className="skill-bar__top">
-                    <span>{skill.name}</span>
-                    <span>{skill.level}%</span>
-                  </div>
-                  <div className="skill-bar__track">
-                    <div className="skill-bar__fill" style={{ width: `${skill.level}%` }} />
-                  </div>
-                </div>
-              ))}
-            </div>
-          </article>
+          </div>
         </div>
       </div>
     </section>
