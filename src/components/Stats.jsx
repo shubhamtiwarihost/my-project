@@ -27,7 +27,7 @@ export default function Stats() {
   }
 
   return (
-    <section className="section stats-3d-section" style={{ paddingTop: 0 }} aria-label="Key metrics">
+    <section className="section stats-3d-section" aria-label="Key metrics">
       <div className={`container reveal ${visible ? 'is-visible' : ''}`} ref={ref}>
         <div
           className={`stats-3d${spatial ? '' : ' stats-3d--flat'}`}
