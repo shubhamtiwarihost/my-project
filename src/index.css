@@ -243,7 +243,7 @@ button, input, textarea { font: inherit; color: inherit; }
 
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .reveal, .btn, .depth-panel, .hero-3d__float, .hero-3d__portrait {
+  .reveal, .btn, .depth-panel {
     transition: none !important;
     animation: none !important;
   }
