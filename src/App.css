@@ -817,253 +817,313 @@
   color: var(--ink);
 }
 
-/* ——— Experience 3D ——— */
+/* ——— Experience board 3D ——— */
 .experience-3d-section { overflow: hidden; }
 
-.experience-3d {
+.experience-board {
   position: relative;
-  perspective: 1600px;
+  display: grid;
+  grid-template-columns: minmax(220px, 0.85fr) minmax(0, 1.45fr);
+  gap: 1.25rem;
+  align-items: stretch;
+  perspective: 1400px;
   isolation: isolate;
-  min-height: 520px;
+  min-height: 460px;
 }
 
-.experience-3d__glow {
+.experience-board__glow {
   position: absolute;
-  inset: 5% 15% auto;
-  height: 50%;
-  background: radial-gradient(ellipse at 50% 40%, rgba(184, 240, 0, 0.12), transparent 60%);
-  filter: blur(12px);
+  inset: 8% 20% auto 35%;
+  height: 55%;
+  background:
+    radial-gradient(ellipse at 50% 40%, rgba(184, 240, 0, 0.14), transparent 60%),
+    radial-gradient(ellipse at 80% 70%, rgba(94, 234, 212, 0.1), transparent 55%);
+  filter: blur(14px);
   pointer-events: none;
+  z-index: 0;
 }
 
-.experience-3d__rail {
-  position: absolute;
-  left: 50%;
-  top: 8%;
-  bottom: 18%;
-  width: 2px;
-  transform: translateX(-50%);
-  background: linear-gradient(180deg, transparent, rgba(184, 240, 0, 0.45), rgba(94, 234, 212, 0.35), transparent);
-  pointer-events: none;
-  opacity: 0.55;
-}
-
-.experience-3d__stage {
+.experience-board__rail {
   position: relative;
   z-index: 1;
-  min-height: 440px;
+  display: flex;
+  flex-direction: column;
+  gap: 0.55rem;
+  padding: 0.35rem 0;
+}
+
+.experience-board__step {
+  display: grid;
+  grid-template-columns: 48px 1fr;
+  gap: 0.75rem;
+  align-items: center;
+  text-align: left;
+  width: 100%;
+  padding: 0.7rem 0.8rem;
+  border-radius: 14px;
+  border: 1px solid transparent;
+  background: rgba(255, 255, 255, 0.02);
+  color: inherit;
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease, transform 0.25s ease, box-shadow 0.25s ease;
+}
+
+.experience-board__step:hover {
+  border-color: rgba(184, 240, 0, 0.22);
+  background: rgba(184, 240, 0, 0.05);
+}
+
+.experience-board__step.is-active {
+  border-color: rgba(184, 240, 0, 0.4);
+  background: linear-gradient(135deg, rgba(184, 240, 0, 0.12), rgba(94, 234, 212, 0.06));
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.28), 0 0 24px rgba(184, 240, 0, 0.08);
+  transform: translateX(4px) translateZ(12px);
+}
+
+.experience-board__mark {
+  width: 48px;
+  height: 48px;
+  border-radius: 14px;
   display: grid;
   place-items: center;
+  font-family: var(--font-display);
+  font-size: 0.85rem;
+  font-weight: 700;
+  color: #06100a;
+  background: linear-gradient(135deg, #b8f000, #5eead4);
+  box-shadow: 0 0 20px rgba(184, 240, 0, 0.25);
+}
+
+.experience-board__step:not(.is-active) .experience-board__mark {
+  background: rgba(18, 24, 22, 0.95);
+  color: var(--ink-muted);
+  border: 1px solid var(--line);
+  box-shadow: none;
+}
+
+.experience-board__step-copy {
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.experience-board__step-copy strong {
+  font-family: var(--font-display);
+  font-size: 0.95rem;
+  font-weight: 700;
+  color: var(--ink);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.experience-board__step-copy em {
+  font-style: normal;
+  font-size: 0.78rem;
+  color: var(--ink-muted);
+}
+
+.experience-board__step.is-active .experience-board__step-copy em {
+  color: var(--accent-2);
+}
+
+.experience-board__panel {
+  position: relative;
+  z-index: 1;
   transform-style: preserve-3d;
   transition: transform 0.25s ease-out;
 }
 
-.exp-3d {
-  position: absolute;
-  width: min(720px, 92%);
-  transform-style: preserve-3d;
-  transition: transform 0.5s cubic-bezier(0.2, 0.8, 0.2, 1), opacity 0.35s ease;
-  cursor: pointer;
-  outline: none;
-}
-
-.exp-3d__face {
-  padding: 1.4rem 1.45rem 1.5rem;
-  border-radius: 18px;
-  background: linear-gradient(160deg, rgba(18, 24, 22, 0.97), rgba(8, 12, 11, 0.94));
-  border: 1px solid rgba(184, 240, 0, 0.16);
-  box-shadow: 0 24px 50px rgba(0, 0, 0, 0.45), inset 0 1px 0 rgba(255, 255, 255, 0.04);
-}
-
-.exp-3d.is-active .exp-3d__face {
-  border-color: rgba(184, 240, 0, 0.42);
+.experience-board__face {
+  position: relative;
+  height: 100%;
+  padding: 1.55rem 1.5rem 1.6rem;
+  border-radius: 20px;
+  overflow: hidden;
+  background: linear-gradient(160deg, rgba(18, 24, 22, 0.98), rgba(8, 12, 11, 0.95));
+  border: 1px solid rgba(184, 240, 0, 0.28);
   box-shadow:
-    0 30px 60px rgba(0, 0, 0, 0.5),
-    0 0 36px rgba(184, 240, 0, 0.1),
+    0 28px 60px rgba(0, 0, 0, 0.5),
+    0 0 40px rgba(184, 240, 0, 0.08),
     inset 0 1px 0 rgba(255, 255, 255, 0.05);
+  transform: rotateY(-6deg) translateZ(18px);
+  transform-origin: left center;
 }
 
-.exp-3d__top {
+.experience-board--flat .experience-board__face {
+  transform: none;
+}
+
+.experience-board__orb {
+  position: absolute;
+  top: -40px;
+  right: -30px;
+  width: 180px;
+  height: 180px;
+  border-radius: 50%;
+  background: radial-gradient(circle, rgba(184, 240, 0, 0.22), transparent 70%);
+  filter: blur(8px);
+  pointer-events: none;
+}
+
+.experience-board__top {
+  position: relative;
   display: flex;
   justify-content: space-between;
   gap: 1rem;
   align-items: flex-start;
+  margin-bottom: 1.15rem;
 }
 
-.exp-3d__company {
+.experience-board__company {
   margin: 0;
   font-size: 0.72rem;
   font-weight: 700;
-  letter-spacing: 0.1em;
+  letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--accent-2);
 }
 
-.exp-3d h3 {
-  margin: 0.25rem 0 0.3rem;
+.experience-board__face h3 {
+  margin: 0.3rem 0 0.35rem;
   font-family: var(--font-display);
-  font-size: 1.25rem;
+  font-size: clamp(1.25rem, 2.4vw, 1.55rem);
   font-weight: 700;
 }
 
-.exp-3d__meta {
+.experience-board__meta {
   margin: 0;
   color: var(--ink-muted);
-  font-size: 0.86rem;
+  font-size: 0.9rem;
 }
 
-.exp-3d__dates {
+.experience-board__dates {
   text-align: right;
   flex: 0 0 auto;
   display: grid;
   gap: 0.25rem;
 }
 
-.exp-3d__dates > span:first-child {
-  font-size: 0.88rem;
+.experience-board__dates > span:first-child {
+  font-size: 0.9rem;
   font-weight: 650;
   color: var(--ink-soft);
 }
 
-.exp-3d__duration {
-  font-size: 0.75rem;
+.experience-board__duration {
+  font-size: 0.78rem;
   color: var(--accent);
-  font-weight: 650;
+  font-weight: 700;
 }
 
-.exp-3d__list {
-  margin: 1rem 0 0;
+.experience-board__list {
+  position: relative;
+  margin: 0;
   padding: 0;
   list-style: none;
   display: grid;
-  gap: 0.55rem;
+  gap: 0.65rem;
 }
 
-.exp-3d__list li {
+.experience-board__list li {
   display: flex;
-  gap: 0.55rem;
+  gap: 0.6rem;
   align-items: flex-start;
   color: var(--ink-soft);
-  font-size: 0.9rem;
-  line-height: 1.45;
+  font-size: 0.92rem;
+  line-height: 1.5;
 }
 
-.exp-3d__list li svg {
+.experience-board__list li svg {
   flex: 0 0 auto;
   margin-top: 0.2rem;
   color: var(--accent);
 }
 
-.exp-3d__tags {
+.experience-board__tags {
+  position: relative;
   display: flex;
   flex-wrap: wrap;
   gap: 0.4rem;
-  margin-top: 1rem;
-}
-
-.experience-3d__dots {
-  position: relative;
-  z-index: 2;
-  display: flex;
-  justify-content: center;
-  gap: 0.45rem;
   margin-top: 1.25rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--line);
 }
 
-.experience-3d__dot {
-  width: 9px;
-  height: 9px;
-  border-radius: 999px;
-  border: 0;
-  padding: 0;
-  background: rgba(255, 255, 255, 0.2);
-  cursor: pointer;
-  transition: width 0.2s ease, background 0.2s ease;
-}
+.experience-board__edu { margin-top: 2rem; }
 
-.experience-3d__dot.is-active {
-  width: 22px;
-  background: linear-gradient(90deg, #b8f000, #5eead4);
-}
-
-.experience-3d__edu { margin-top: 2rem; }
-
-.experience-3d__edu h3 {
+.experience-board__edu h3 {
   margin: 0 0 0.85rem;
   font-family: var(--font-display);
   font-size: 1.15rem;
 }
 
-.experience-3d__edu-grid {
+.experience-board__edu-grid {
   display: grid;
   grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 0.85rem;
 }
 
-.experience-3d__edu-card {
+.experience-board__edu-card {
   padding: 1.15rem 1.2rem;
   border-radius: 14px;
   background: linear-gradient(160deg, rgba(18, 24, 22, 0.9), rgba(8, 12, 11, 0.88));
   border: 1px solid rgba(184, 240, 0, 0.14);
+  transition: transform 0.25s ease, border-color 0.2s ease;
 }
 
-.experience-3d__edu-card h4 {
+.experience-board__edu-card:hover {
+  transform: translateY(-3px);
+  border-color: rgba(184, 240, 0, 0.35);
+}
+
+.experience-board__edu-card h4 {
   margin: 0 0 0.35rem;
   font-family: var(--font-display);
   font-size: 1rem;
 }
 
-.experience-3d__edu-card p {
+.experience-board__edu-card p {
   margin: 0;
   color: var(--ink-muted);
   font-size: 0.88rem;
 }
 
-.experience-3d--flat .experience-3d__glow,
-.experience-3d--flat .experience-3d__rail { display: none; }
-
-.experience-3d--flat .experience-3d__stage {
-  display: grid;
-  gap: 1rem;
-  min-height: 0;
-  place-items: stretch;
-}
-
-.experience-3d--flat .exp-3d {
-  position: relative;
-  width: auto;
-  transform: none !important;
-  opacity: 1 !important;
-}
+.experience-board--flat .experience-board__glow { display: none; }
 
 @media (max-width: 1000px) {
-  .stats-3d__stage { grid-template-columns: 1fr 1fr; }
-  .about-3d__stage { grid-template-columns: 1fr; }
-  .about-3d__panel--main,
-  .about-3d__chip { transform: none; }
-  .skills-3d__stage { grid-template-columns: 1fr 1fr; }
-  .skill-3d { transform: none; }
-  .experience-3d__stage {
-    display: grid;
-    gap: 1rem;
+  .experience-board {
+    grid-template-columns: 1fr;
     min-height: 0;
-    place-items: stretch;
-    transform: none !important;
   }
-  .exp-3d {
-    position: relative;
-    width: auto;
-    transform: none !important;
-    opacity: 1 !important;
+
+  .experience-board__rail {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0.5rem;
   }
-  .experience-3d__rail,
-  .experience-3d__dots { display: none; }
-  .experience-3d__edu-grid { grid-template-columns: 1fr; }
+
+  .experience-board__face {
+    transform: none;
+  }
+
+  .experience-board__edu-grid {
+    grid-template-columns: 1fr;
+  }
 }
 
 @media (max-width: 640px) {
-  .stats-3d__stage,
-  .skills-3d__stage { grid-template-columns: 1fr; }
+  .experience-board__rail {
+    grid-template-columns: 1fr;
+  }
+
+  .experience-board__top {
+    flex-direction: column;
+  }
+
+  .experience-board__dates {
+    text-align: left;
+  }
 }
 
 /* Projects — creative 3D stage */
