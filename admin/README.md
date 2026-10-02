@@ -12,8 +12,8 @@ Core PHP + MySQL + Bootstrap 5 admin dashboard.
 ```php
 'db' => [
   'host' => 'localhost',
-  'name' => 'u932835494_portfolio',
-  'user' => 'u932835494_portfolio',
+  'name' => 'u932835494_myportfolio',
+  'user' => 'u932835494_myportfolio',
   'pass' => 'YOUR_DB_PASSWORD',
 ],
 ```
