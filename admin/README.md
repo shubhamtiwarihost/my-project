@@ -47,6 +47,14 @@ Create `admin/config/config.local.php` (git-ignored) to override any config valu
 return ['debug' => true, 'db' => ['dsn' => 'sqlite:/path/to/dev.sqlite', 'user' => null, 'pass' => null]];
 ```
 
+## First-time setup (creates the tables)
+
+Open `/admin/public/install.php`, enter the **database password** from the hosting panel and
+the admin email + password you want. It creates all tables, loads the portfolio content and
+creates the admin login. Safe to run again (it also resets that admin's password).
+
+`/api/health.php` shows whether the database connects and the tables exist.
+
 ## Forgot the admin password
 
 Open `/admin/public/reset_admin_password.php` and enter the **database password** from the
