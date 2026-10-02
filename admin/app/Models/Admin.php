@@ -38,9 +38,9 @@ final class Admin
     public static function touchLogin(int $id): void
     {
         $stmt = Database::connection()->prepare(
-            'UPDATE admins SET last_login_at = NOW() WHERE id = :id'
+            'UPDATE admins SET last_login_at = :at WHERE id = :id'
         );
-        $stmt->execute(['id' => $id]);
+        $stmt->execute(['at' => date('Y-m-d H:i:s'), 'id' => $id]);
     }
 
     public static function updatePassword(int $id, string $hash): void

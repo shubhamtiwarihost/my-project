@@ -77,10 +77,6 @@ body {
   }
 }
 
-@media (min-width: 901px) {
-  body { perspective: 1200px; }
-}
-
 body::before {
   content: "";
   position: fixed;
@@ -104,10 +100,6 @@ button, input, textarea { font: inherit; color: inherit; }
 .app-shell {
   padding-left: var(--side-w);
   overflow-x: clip;
-}
-
-@media (min-width: 901px) {
-  .app-shell { transform-style: preserve-3d; }
 }
 
 .container {

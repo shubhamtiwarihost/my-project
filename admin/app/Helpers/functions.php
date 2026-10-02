@@ -35,6 +35,23 @@ function base_path(string $path = ''): string
     return $path === '' ? $root : $root . '/' . ltrim($path, '/');
 }
 
+/**
+ * URL prefix the admin is being served under.
+ * Works for both /admin/public/... (direct) and /admin/... (rewritten by admin/.htaccess).
+ */
+function app_base(): string
+{
+    $base = rtrim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '/index.php')), '/');
+    $uri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
+    if (str_ends_with($base, '/public') && !str_starts_with($uri . '/', $base . '/')) {
+        $short = substr($base, 0, -strlen('/public'));
+        if ($short === '' || str_starts_with($uri . '/', $short . '/')) {
+            return $short;
+        }
+    }
+    return $base;
+}
+
 function url(string $path = ''): string
 {
     $configured = rtrim((string) config('app_url', ''), '/');
@@ -42,13 +59,9 @@ function url(string $path = ''): string
         return $configured . '/' . ltrim($path, '/');
     }
 
-    $script = $_SERVER['SCRIPT_NAME'] ?? '/index.php';
-    $base = rtrim(str_replace('\\', '/', dirname($script)), '/');
-    if (str_ends_with($base, '/public')) {
-        // keep /public as base
-    }
+    $base = app_base();
     $path = ltrim($path, '/');
-    return ($base === '' ? '' : $base) . ($path === '' ? '' : '/' . $path);
+    return $base . ($path === '' ? ($base === '' ? '/' : '') : '/' . $path);
 }
 
 function redirect(string $path): never
@@ -93,7 +106,7 @@ function method_field(string $method): string
 function active_nav(string $needle): string
 {
     $uri = trim(parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/', '/');
-    $base = trim(str_replace('\\', '/', dirname($_SERVER['SCRIPT_NAME'] ?? '')), '/');
+    $base = trim(app_base(), '/');
     if ($base !== '' && str_starts_with($uri, $base)) {
         $uri = trim(substr($uri, strlen($base)), '/');
     }
@@ -114,4 +127,38 @@ function format_bytes(int $bytes): string
         $i++;
     }
     return round($n, 1) . ' ' . $units[$i];
+}
+
+/** "2026-10-02 15:04:05" → ['02 Oct 2026', '03:04:05 PM', 'Friday'] */
+function split_datetime(?string $value): array
+{
+    $ts = $value ? strtotime($value) : false;
+    if ($ts === false) {
+        return ['-', '-', ''];
+    }
+    return [date('d M Y', $ts), date('h:i:s A', $ts), date('l', $ts)];
+}
+
+/** City, Region, Country — skipping parts that are missing. */
+function format_location(array $row): string
+{
+    $parts = array_filter([
+        $row['city'] ?? null,
+        $row['region'] ?? null,
+        $row['country'] ?? null,
+    ], static fn ($v) => is_string($v) && $v !== '');
+    $parts = array_values(array_unique($parts));
+    return $parts ? implode(', ', $parts) : 'Unknown';
+}
+
+/** Where the visitor arrived from: "linkedin.com", "Direct", … */
+function format_referrer(?string $referrer): string
+{
+    $referrer = trim((string) $referrer);
+    if ($referrer === '' || $referrer === 'direct') {
+        return 'Direct';
+    }
+    $host = parse_url(str_contains($referrer, '://') ? $referrer : 'https://' . $referrer, PHP_URL_HOST);
+    $host = preg_replace('/^www\./', '', (string) $host);
+    return $host !== '' ? $host : 'Direct';
 }

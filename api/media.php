@@ -8,6 +8,7 @@ declare(strict_types=1);
  */
 
 require __DIR__ . '/lib/Database.php';
+require __DIR__ . '/lib/Geo.php';
 require __DIR__ . '/lib/Tracker.php';
 
 // Reuse config loader without forcing JSON content-type for file responses
@@ -16,6 +17,7 @@ function api_config(): array
     static $cfg;
     if ($cfg === null) {
         $cfg = require dirname(__DIR__) . '/admin/config/config.php';
+        date_default_timezone_set($cfg['timezone'] ?? 'Asia/Kolkata');
     }
     return $cfg;
 }
@@ -49,7 +51,7 @@ try {
     if ($download || str_contains((string) $media['mime_type'], 'pdf')) {
         // count resume / PDF downloads when download flag set
         if ($download) {
-            Tracker::trackDownload($id);
+            Tracker::trackDownload($id, ['source' => (string) ($_GET['src'] ?? '')]);
         }
     }
 

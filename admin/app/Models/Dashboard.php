@@ -34,24 +34,48 @@ final class Dashboard
         return self::count('contact_messages', "status = 'Unread'");
     }
 
+    /** Rows whose $column falls in [today 00:00, tomorrow 00:00) in the configured timezone. */
+    private static function countSince(string $table, string $column, string $from): int
+    {
+        return self::count($table, "{$column} >= :since", ['since' => $from]);
+    }
+
     public static function visitorsToday(): int
     {
-        return self::count('visitors', 'DATE(visited_at) = CURDATE()');
+        return self::countSince('visitors', 'visited_at', date('Y-m-d 00:00:00'));
     }
 
     public static function visitorsMonth(): int
     {
-        return self::count('visitors', 'YEAR(visited_at) = YEAR(CURDATE()) AND MONTH(visited_at) = MONTH(CURDATE())');
+        return self::countSince('visitors', 'visited_at', date('Y-m-01 00:00:00'));
     }
 
     public static function downloadsToday(): int
     {
-        return self::count('resume_downloads', 'DATE(downloaded_at) = CURDATE()');
+        return self::countSince('resume_downloads', 'downloaded_at', date('Y-m-d 00:00:00'));
+    }
+
+    public static function downloadsWeek(): int
+    {
+        return self::countSince('resume_downloads', 'downloaded_at', date('Y-m-d 00:00:00', strtotime('-6 days')));
     }
 
     public static function downloadsMonth(): int
     {
-        return self::count('resume_downloads', 'YEAR(downloaded_at) = YEAR(CURDATE()) AND MONTH(downloaded_at) = MONTH(CURDATE())');
+        return self::countSince('resume_downloads', 'downloaded_at', date('Y-m-01 00:00:00'));
+    }
+
+    public static function recentDownloads(int $limit = 6): array
+    {
+        $stmt = Database::connection()->prepare(
+            'SELECT * FROM resume_downloads
+             WHERE deleted_at IS NULL
+             ORDER BY downloaded_at DESC
+             LIMIT :lim'
+        );
+        $stmt->bindValue('lim', $limit, \PDO::PARAM_INT);
+        $stmt->execute();
+        return $stmt->fetchAll();
     }
 
     public static function topPages(int $limit = 5): array

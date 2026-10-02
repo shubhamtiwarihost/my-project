@@ -9,6 +9,10 @@ require dirname(__DIR__) . '/app/Core/Autoloader.php';
 Autoloader::register();
 require dirname(__DIR__) . '/app/Helpers/functions.php';
 
+// Download tracking helpers shared with the public API
+require dirname(__DIR__, 2) . '/api/lib/Geo.php';
+require dirname(__DIR__, 2) . '/api/lib/Tracker.php';
+
 $cfg = config();
 date_default_timezone_set($cfg['timezone'] ?? 'UTC');
 
@@ -19,8 +23,7 @@ session_start([
     'use_strict_mode' => true,
 ]);
 
-$scriptName = $_SERVER['SCRIPT_NAME'] ?? '/index.php';
-$basePath = rtrim(str_replace('\\', '/', dirname($scriptName)), '/');
+$basePath = app_base();
 $requestUri = parse_url($_SERVER['REQUEST_URI'] ?? '/', PHP_URL_PATH) ?: '/';
 $path = $requestUri;
 

@@ -13,7 +13,7 @@ final class Database
         }
 
         $cfg = api_config()['db'];
-        $dsn = sprintf(
+        $dsn = !empty($cfg['dsn']) ? $cfg['dsn'] : sprintf(
             'mysql:host=%s;port=%s;dbname=%s;charset=%s',
             $cfg['host'],
             $cfg['port'],

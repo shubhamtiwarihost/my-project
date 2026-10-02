@@ -35,6 +35,7 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') === 'OPTIONS') {
 
 require __DIR__ . '/lib/Database.php';
 require __DIR__ . '/lib/ContentBuilder.php';
+require __DIR__ . '/lib/Geo.php';
 require __DIR__ . '/lib/Tracker.php';
 
 function api_config(): array
@@ -42,9 +43,12 @@ function api_config(): array
     static $cfg;
     if ($cfg === null) {
         $cfg = require dirname(__DIR__) . '/admin/config/config.php';
+        date_default_timezone_set($cfg['timezone'] ?? 'Asia/Kolkata');
     }
     return $cfg;
 }
+
+api_config();
 
 function api_json(mixed $data, int $status = 200): never
 {

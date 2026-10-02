@@ -1,3 +1,12 @@
-RewriteEngine On
-RewriteRule ^$ public/ [L]
-RewriteRule (.*) public/$1 [L]
+<IfModule mod_rewrite.c>
+    RewriteEngine On
+
+    # Redirect /admin/public/foo to /admin/foo (clean URL)
+    RewriteCond %{THE_REQUEST} \s/admin/public/(\S*) [NC]
+    RewriteRule ^public/(.*)$ /admin/$1 [R=301,L]
+
+    # Route request into public folder internally
+    RewriteCond %{REQUEST_URI} !^/admin/public/
+    RewriteRule ^(.*)$ public/$1 [L]
+</IfModule>
+

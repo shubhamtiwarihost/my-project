@@ -60,6 +60,7 @@ return [
     'GET|/analytics/visitors'  => [AnalyticsController::class, 'visitors'],
     'GET|/analytics/downloads' => [AnalyticsController::class, 'downloads'],
     'GET|/analytics/downloads/export' => [AnalyticsController::class, 'exportDownloads'],
+    'POST|/analytics/downloads/{id}/delete' => [AnalyticsController::class, 'deleteDownload'],
 
     'GET|/account/password'  => [AccountController::class, 'password'],
     'POST|/account/password' => [AccountController::class, 'updatePassword'],

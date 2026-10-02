@@ -33,3 +33,10 @@ admin/storage/uploads/documents/*
 admin/storage/uploads/backups/*
 !admin/storage/uploads/**/.gitkeep
 !admin/storage/uploads/**/index.php
+
+# Local-only overrides and queued downloads
+admin/config/config.local.php
+admin/storage/queue/*
+!admin/storage/queue/.gitkeep
+!admin/storage/queue/.htaccess
+.shot.tmp.mjs

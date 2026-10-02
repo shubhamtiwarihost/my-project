@@ -4,8 +4,8 @@
     ['Total Visitors', $stats['total_visitors'] ?? 0],
     ["Today's Visitors", $stats['today_visitors'] ?? 0],
     ['Monthly Visitors', $stats['monthly_visitors'] ?? 0],
-    ['Resume Downloads', $stats['total_downloads'] ?? 0],
-    ["Today's Downloads", $stats['today_downloads'] ?? 0],
+    ['CV Downloads', $stats['total_downloads'] ?? 0],
+    ["Today's CV Downloads", $stats['today_downloads'] ?? 0],
     ['Unread Messages', $stats['unread_messages'] ?? 0],
   ];
   foreach ($cards as [$label, $value]):
@@ -17,6 +17,31 @@
     </div>
   </div>
   <?php endforeach; ?>
+</div>
+
+<div class="card-soft p-3 mb-3">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h2 class="h6 mb-0">Latest CV downloads</h2>
+    <a href="<?= e(url('analytics/downloads')) ?>" class="small">Full report</a>
+  </div>
+  <div class="table-responsive">
+    <table class="table table-sm align-middle mb-0">
+      <thead><tr><th>Date</th><th>Time</th><th>Location</th><th>Device</th><th>Came from</th></tr></thead>
+      <tbody>
+      <?php if (empty($recentDownloads)): ?>
+        <tr><td colspan="5" class="text-muted">No CV downloads recorded yet.</td></tr>
+      <?php else: foreach ($recentDownloads as $r): [$date, $time] = split_datetime($r['downloaded_at']); ?>
+        <tr>
+          <td class="text-nowrap"><?= e($date) ?></td>
+          <td class="text-nowrap"><?= e($time) ?></td>
+          <td><?= e(format_location($r)) ?></td>
+          <td class="small"><?= e(implode(' · ', array_filter([$r['device'] ?? '', $r['browser'] ?? '']))) ?></td>
+          <td class="small"><?= e(format_referrer($r['referrer'] ?? '')) ?></td>
+        </tr>
+      <?php endforeach; endif; ?>
+      </tbody>
+    </table>
+  </div>
 </div>
 
 <div class="row g-3">
@@ -72,7 +97,7 @@
       <h2 class="h6 mb-2">Active Widgets</h2>
       <div class="d-flex flex-wrap gap-2">
         <?php foreach ($widgets as $w): ?>
-          <span class="badge text-bg-light border"><?= e($w['title']) ?></span>
+          <span class="badge text-bg-dark border"><?= e($w['title']) ?></span>
         <?php endforeach; ?>
       </div>
     </div>

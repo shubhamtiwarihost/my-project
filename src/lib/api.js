@@ -41,15 +41,37 @@ export async function trackVisit(payload) {
   }
 }
 
-export async function trackResumeDownload(mediaId) {
+/** Site the visitor arrived from (e.g. "linkedin.com"), remembered for the whole visit. */
+function landingSource() {
+  const key = 'portfolio_from'
   try {
-    await request('/download.php', {
-      method: 'POST',
-      body: JSON.stringify({ media_id: mediaId ?? null }),
-    })
+    let from = sessionStorage.getItem(key)
+    if (!from) {
+      const utm = new URLSearchParams(window.location.search).get('utm_source')
+      let host = ''
+      try {
+        host = document.referrer ? new URL(document.referrer).hostname : ''
+      } catch {
+        host = ''
+      }
+      if (host === window.location.hostname) host = ''
+      from = utm || host || 'direct'
+      sessionStorage.setItem(key, from)
+    }
+    return from
   } catch {
-    // ignore
+    return 'direct'
   }
+}
+
+/**
+ * Tracked CV download link. The server sends the PDF and records the download
+ * (date, time, location, device) for the admin panel. `button` says which
+ * button was used: "hero", "contact", …
+ */
+export function cvDownloadUrl(button) {
+  const params = new URLSearchParams({ src: button, from: landingSource() })
+  return `${API_BASE}/cv.php?${params}`
 }
 
 export async function submitContact(form) {

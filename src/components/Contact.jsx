@@ -3,8 +3,8 @@ import { useContent } from '../context/ContentProvider'
 import { useInView } from '../hooks/useInView'
 import { useIsCompactDevice } from '../hooks/useIsCompactDevice'
 import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
-import { submitContact } from '../lib/api'
-import { IconSend } from './Icons'
+import { cvDownloadUrl, submitContact } from '../lib/api'
+import { IconDownload, IconSend } from './Icons'
 
 export default function Contact() {
   const { contactCopy, profile } = useContent()
@@ -102,9 +102,10 @@ export default function Contact() {
                   {profile.resumeUrl ? (
                     <a
                       className="btn btn-primary"
-                      href={profile.resumeUrl}
+                      href={cvDownloadUrl('contact')}
                       download={profile.resumeFileName || 'resume.pdf'}
                     >
+                      <IconDownload />
                       Download CV
                     </a>
                   ) : (

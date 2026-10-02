@@ -1,3 +1,4 @@
+import { lazy, Suspense, useEffect } from 'react'
 import './App.css'
 import { ContentProvider, useContent } from './context/ContentProvider'
 import AmbientMusic from './components/AmbientMusic'
@@ -10,9 +11,21 @@ import Experience from './components/Experience'
 import Projects from './components/Projects'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
+import { CursorGlow, ScrollProgress } from './components/PremiumFx'
+import { useIsCompactDevice } from './hooks/useIsCompactDevice'
+import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion'
+import { initGA } from './lib/analytics'
+
+const WorldScene = lazy(() => import('./components/WorldScene'))
 
 function PortfolioShell() {
   const { status, settings } = useContent()
+  const reducedMotion = usePrefersReducedMotion()
+  const compact = useIsCompactDevice()
+
+  useEffect(() => {
+    initGA()
+  }, [])
 
   if (settings?.maintenance_mode) {
     return (
@@ -27,6 +40,13 @@ function PortfolioShell() {
 
   return (
     <div className="app-shell" data-content-status={status}>
+      {!reducedMotion && (
+        <Suspense fallback={null}>
+          <WorldScene lite={compact} />
+        </Suspense>
+      )}
+      <ScrollProgress />
+      {!compact && !reducedMotion && <CursorGlow />}
       <Navbar />
       <AmbientMusic />
       <main>

@@ -11,7 +11,10 @@ if (($_SERVER['REQUEST_METHOD'] ?? 'GET') !== 'POST') {
 try {
     $body = api_body();
     $mediaId = isset($body['media_id']) && $body['media_id'] !== '' ? (int) $body['media_id'] : null;
-    Tracker::trackDownload($mediaId);
+    Tracker::trackDownload($mediaId, [
+        'source'   => (string) ($body['source'] ?? ''),
+        'referrer' => (string) ($body['referrer'] ?? ''),
+    ]);
     api_json(['ok' => true]);
 } catch (Throwable $e) {
     $debug = (bool) (api_config()['debug'] ?? false);

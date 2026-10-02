@@ -14,6 +14,12 @@ final class DashboardController extends Controller
     {
         $this->requireAuth();
 
+        try {
+            \Tracker::ensureDownloadSchema(\App\Core\Database::connection());
+        } catch (\Throwable) {
+            // dashboard still renders without the newer columns
+        }
+
         $stats = [
             'total_visitors'    => Dashboard::count('visitors'),
             'today_visitors'    => Dashboard::visitorsToday(),
@@ -32,6 +38,7 @@ final class DashboardController extends Controller
             'stats'          => $stats,
             'topPages'       => Dashboard::topPages(),
             'recentMessages' => Dashboard::recentMessages(),
+            'recentDownloads' => Dashboard::recentDownloads(),
             'unread'         => $stats['unread_messages'],
         ]);
     }

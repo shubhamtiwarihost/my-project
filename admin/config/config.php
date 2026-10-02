@@ -6,11 +6,11 @@
 
 declare(strict_types=1);
 
-return [
+$config = [
     'app_name' => 'Portfolio CMS',
     'app_url'  => '', // e.g. https://gyaando.com/admin/public — leave blank to auto-detect
     'timezone' => 'Asia/Kolkata',
-    'debug'    => true,
+    'debug'    => false, // true shows raw DB errors to every visitor — only for local debugging
 
     'db' => [
         'host'    => 'localhost',
@@ -31,3 +31,10 @@ return [
         'allowed_docs'   => ['application/pdf'],
     ],
 ];
+
+// Optional untracked overrides for local development (e.g. a different DSN)
+if (is_file(__DIR__ . '/config.local.php')) {
+    $config = array_replace_recursive($config, require __DIR__ . '/config.local.php');
+}
+
+return $config;

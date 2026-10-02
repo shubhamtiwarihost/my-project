@@ -20,7 +20,7 @@ final class Database
         $cfg = require dirname(__DIR__, 2) . '/config/config.php';
         $db  = $cfg['db'];
 
-        $dsn = sprintf(
+        $dsn = !empty($db['dsn']) ? $db['dsn'] : sprintf(
             'mysql:host=%s;port=%s;dbname=%s;charset=%s',
             $db['host'],
             $db['port'],

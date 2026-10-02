@@ -33,9 +33,24 @@ Core PHP + MySQL + Bootstrap 5 admin dashboard.
 - Media upload (images/PDF)
 - Navigation, Social, SEO, Website Settings
 - Contact messages inbox
-- Visitor + Resume download analytics (+ CSV export)
+- Visitor analytics
+- **CV Downloads report**: how many times, date, time (IST), location, device, source — with filters and CSV export
 - Change password
 - Backups list UI
+
+## Local development without MySQL
+
+Create `admin/config/config.local.php` (git-ignored) to override any config value, e.g.:
+
+```php
+<?php
+return ['debug' => true, 'db' => ['dsn' => 'sqlite:/path/to/dev.sqlite', 'user' => null, 'pass' => null]];
+```
+
+## Forgot the admin password
+
+Open `/admin/public/reset_admin_password.php` and enter the **database password** from the
+hosting panel plus a new admin password.
 
 ## Next steps
 
