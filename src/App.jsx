@@ -17,6 +17,7 @@ import Preloader from './components/Preloader'
 import WelcomeVoice from './components/WelcomeVoice'
 import { useIsCompactDevice } from './hooks/useIsCompactDevice'
 import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion'
+import { useSectionRouting } from './hooks/useSectionRouting'
 import { initGA } from './lib/analytics'
 
 const WorldScene = lazy(() => import('./components/WorldScene'))
@@ -25,6 +26,7 @@ function PortfolioShell() {
   const { status, settings, profile } = useContent()
   const reducedMotion = usePrefersReducedMotion()
   const compact = useIsCompactDevice()
+  useSectionRouting()
 
   useEffect(() => {
     initGA()
