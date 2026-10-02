@@ -8,16 +8,16 @@ const CYAN = '#5eead4'
 
 /**
  * Where the core sits as the page scrolls (p = 0 top … 1 bottom).
- * It starts beside the hero copy, then drifts between the page edges so it
- * shows through the gaps between the glass panels and never sits behind text.
+ * Headings and copy are left-aligned, so the core stays on the right-hand side
+ * and only bobs in height and size — it never ends up behind text.
  */
 const PATH = [
-  { p: 0, x: 2.05, y: 0.15, s: 0.78 },
-  { p: 0.16, x: -3.2, y: 0.55, s: 0.6 },
-  { p: 0.36, x: 3.25, y: -0.35, s: 0.58 },
-  { p: 0.58, x: -3.2, y: 0.25, s: 0.6 },
-  { p: 0.8, x: 3.2, y: 0.1, s: 0.62 },
-  { p: 1, x: 3.2, y: 0.9, s: 0.62 },
+  { p: 0, x: 2.0, y: 0.35, s: 0.86 },
+  { p: 0.14, x: 3.15, y: 0.9, s: 0.6 },
+  { p: 0.36, x: 3.3, y: -0.5, s: 0.56 },
+  { p: 0.58, x: 3.2, y: 0.6, s: 0.6 },
+  { p: 0.8, x: 3.3, y: -0.3, s: 0.6 },
+  { p: 1, x: 3.2, y: 0.8, s: 0.62 },
 ]
 
 function samplePath(p) {
@@ -113,12 +113,14 @@ function Core({ input, lite }) {
     const target = samplePath(scroll)
     // Narrow screens: pull the path inwards and lift the core above the hero copy
     const k = Math.min(1, aspect / 1.6)
-    const lift = (1 - k) * (1 - scroll) * 1.5
+    const lift = (1 - k) * 2
+    // On phones there is no free side column, so the core bows out after the hero
+    const fade = k < 0.7 ? 1 - THREE.MathUtils.smoothstep(scroll, 0.02, 0.09) : 1
     const ease = 1 - Math.exp(-dt * 3)
 
     group.current.position.x += (target.x * k + px * 0.12 - group.current.position.x) * ease
     group.current.position.y += (target.y + lift - py * 0.1 - group.current.position.y) * ease
-    const scale = target.s * (0.62 + 0.38 * k)
+    const scale = Math.max(0.0001, target.s * (0.62 + 0.38 * k) * fade)
     group.current.scale.setScalar(group.current.scale.x + (scale - group.current.scale.x) * ease)
 
     const t = state.clock.elapsedTime
@@ -219,6 +221,56 @@ function Starfield({ input, lite }) {
   )
 }
 
+/** Wireframe and metal shapes spread down the page; they drift past as you scroll. */
+const DRIFTERS = [
+  { kind: 'octa', pos: [-5.2, -3.2, -3], size: 0.55, color: CYAN },
+  { kind: 'torus', pos: [5.2, -6.4, -2.2], size: 0.6, color: LIME },
+  { kind: 'knot', pos: [-5.2, -10.2, -3.4], size: 0.5, color: LIME },
+  { kind: 'box', pos: [5.2, -13.6, -2.6], size: 0.6, color: CYAN },
+  { kind: 'octa', pos: [-5.2, -17.2, -2.4], size: 0.7, color: LIME },
+  { kind: 'torus', pos: [5.2, -20.6, -3.2], size: 0.7, color: CYAN },
+  { kind: 'knot', pos: [-5.2, -24, -2.8], size: 0.55, color: CYAN },
+]
+
+function Drifter({ kind, pos, size, color, index }) {
+  const ref = useRef(null)
+  useFrame((state, dt) => {
+    if (!ref.current) return
+    ref.current.rotation.x += dt * (0.12 + (index % 3) * 0.05)
+    ref.current.rotation.y += dt * (0.16 + (index % 4) * 0.04)
+    ref.current.position.y = pos[1] + Math.sin(state.clock.elapsedTime * 0.5 + index) * 0.25
+  })
+  return (
+    <mesh ref={ref} position={pos} scale={size}>
+      {kind === 'octa' && <octahedronGeometry args={[1, 0]} />}
+      {kind === 'torus' && <torusGeometry args={[0.8, 0.28, 10, 28]} />}
+      {kind === 'knot' && <torusKnotGeometry args={[0.7, 0.2, 80, 10]} />}
+      {kind === 'box' && <boxGeometry args={[1.2, 1.2, 1.2]} />}
+      <meshBasicMaterial color={color} wireframe transparent opacity={0.24} toneMapped={false} />
+    </mesh>
+  )
+}
+
+function Drifters({ input, lite }) {
+  const ref = useRef(null)
+  const list = lite ? DRIFTERS.filter((_, i) => i % 2 === 0) : DRIFTERS
+
+  useFrame((_, dt) => {
+    if (!ref.current) return
+    // The whole field rises as the page scrolls down, like descending through it
+    const target = input.current.scroll * 24
+    ref.current.position.y += (target - ref.current.position.y) * (1 - Math.exp(-dt * 3))
+  })
+
+  return (
+    <group ref={ref}>
+      {list.map((d, i) => (
+        <Drifter key={`${d.kind}-${d.pos[1]}`} index={i} {...d} />
+      ))}
+    </group>
+  )
+}
+
 function Rig({ input, lite }) {
   useFrame((state, dt) => {
     const { px, py, scroll } = input.current
@@ -272,6 +324,7 @@ export default function WorldScene({ lite = false }) {
             </Environment>
           )}
           <Starfield input={input} lite={lite} />
+          <Drifters input={input} lite={lite} />
           <Core input={input} lite={lite} />
           <Rig input={input} lite={lite} />
         </Canvas>

@@ -1,54 +1,55 @@
+import { useMemo } from 'react'
 import { useContent } from '../context/ContentProvider'
-import { useInView } from '../hooks/useInView'
 import { useIsCompactDevice } from '../hooks/useIsCompactDevice'
-import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
-import { useStageTilt } from '../hooks/useStageTilt'
+import Reveal from './ui/Reveal'
+import SectionHead from './ui/SectionHead'
+import SkillSphere from './ui/SkillSphere'
+import Tilt from './ui/Tilt'
+
+/** "AWS (EC2, S3, RDS, CloudWatch)" → "AWS" so labels fit on the globe. */
+function shortLabel(skill) {
+  return skill.replace(/\s*\(.*\)\s*/, '').trim()
+}
 
 export default function Skills() {
   const { skillGroups, skillsCopy } = useContent()
-  const [ref, visible] = useInView()
   const compact = useIsCompactDevice()
-  const reducedMotion = usePrefersReducedMotion()
-  const spatial = !compact && !reducedMotion
-  const [stageRef, stageStyle, onStageMove, onStageLeave] = useStageTilt(spatial)
+
+  const globeSkills = useMemo(() => {
+    // Take skills round-robin across groups so every area is represented
+    const picked = []
+    const longest = Math.max(0, ...skillGroups.map((g) => g.skills.length))
+    for (let i = 0; i < longest; i += 1) {
+      skillGroups.forEach((g) => {
+        if (g.skills[i]) picked.push(shortLabel(g.skills[i]))
+      })
+    }
+    return [...new Set(picked)].slice(0, compact ? 14 : 22)
+  }, [skillGroups, compact])
 
   return (
-    <section id="skills" className="section section--tint skills-3d-section">
-      <div className={`container reveal ${visible ? 'is-visible' : ''}`} ref={ref}>
-        <header className="section-head">
-          <p className="eyebrow">Skills</p>
-          <h2 className="section-title">{skillsCopy.title}</h2>
-          <p className="section-subtitle">{skillsCopy.subtitle}</p>
-        </header>
+    <section id="skills" className="section p-section">
+      <div className="container">
+        <SectionHead index="02" eyebrow="Skills" title={skillsCopy.title} subtitle={skillsCopy.subtitle} />
 
-        <div
-          className={`skills-3d${spatial ? '' : ' skills-3d--flat'}`}
-          ref={stageRef}
-          onPointerMove={onStageMove}
-          onPointerLeave={onStageLeave}
-        >
-          <div className="skills-3d__glow" aria-hidden="true" />
-          <div className="skills-3d__floor" aria-hidden="true" />
+        <div className="p-skills">
+          <Reveal className="p-skills__globe">
+            <SkillSphere skills={globeSkills} />
+          </Reveal>
 
-          <div className="skills-3d__stage" style={stageStyle}>
+          <div className="p-skills__grid">
             {skillGroups.map((group, i) => (
-              <article
-                key={group.title}
-                className="skill-3d"
-                style={spatial ? { '--i': i } : undefined}
-              >
-                <div className="skill-3d__face">
-                  <div className="skill-3d__index" aria-hidden="true">
-                    {String(i + 1).padStart(2, '0')}
-                  </div>
-                  <h3>{group.title}</h3>
-                  <div className="skill-3d__tags">
+              <Reveal key={group.title} delay={(i % 2) * 90}>
+                <Tilt as="article" className="p-card p-skill" max={10}>
+                  <span className="p-skill__index" aria-hidden="true">{String(i + 1).padStart(2, '0')}</span>
+                  <h3 className="z1">{group.title}</h3>
+                  <div className="p-tags">
                     {group.skills.map((skill) => (
-                      <span key={skill} className="tag tag--skill">{skill}</span>
+                      <span key={skill} className="p-tag">{skill}</span>
                     ))}
                   </div>
-                </div>
-              </article>
+                </Tilt>
+              </Reveal>
             ))}
           </div>
         </div>

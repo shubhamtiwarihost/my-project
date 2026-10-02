@@ -1,5 +1,6 @@
 import { lazy, Suspense, useEffect } from 'react'
 import './App.css'
+import './premium.css'
 import { ContentProvider, useContent } from './context/ContentProvider'
 import AmbientMusic from './components/AmbientMusic'
 import Navbar from './components/Navbar'
@@ -12,6 +13,7 @@ import Projects from './components/Projects'
 import Contact from './components/Contact'
 import Footer from './components/Footer'
 import { CursorGlow, ScrollProgress } from './components/PremiumFx'
+import Preloader from './components/Preloader'
 import { useIsCompactDevice } from './hooks/useIsCompactDevice'
 import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion'
 import { initGA } from './lib/analytics'
@@ -19,7 +21,7 @@ import { initGA } from './lib/analytics'
 const WorldScene = lazy(() => import('./components/WorldScene'))
 
 function PortfolioShell() {
-  const { status, settings } = useContent()
+  const { status, settings, profile } = useContent()
   const reducedMotion = usePrefersReducedMotion()
   const compact = useIsCompactDevice()
 
@@ -45,6 +47,7 @@ function PortfolioShell() {
           <WorldScene lite={compact} />
         </Suspense>
       )}
+      {!reducedMotion && <Preloader initials={profile.initials} />}
       <ScrollProgress />
       {!compact && !reducedMotion && <CursorGlow />}
       <Navbar />
