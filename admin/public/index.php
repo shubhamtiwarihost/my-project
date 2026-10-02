@@ -38,4 +38,14 @@ if ($path !== '/') {
 
 $routes = require dirname(__DIR__) . '/config/routes.php';
 $router = new Router($routes);
-$router->dispatch($_SERVER['REQUEST_METHOD'] ?? 'GET', $path);
+try {
+    $router->dispatch($_SERVER['REQUEST_METHOD'] ?? 'GET', $path);
+} catch (PDOException $e) {
+    // 42S02 = table missing: the database has not been set up yet
+    if ($e->getCode() === '42S02') {
+        header('Location: ' . url('install.php'));
+        exit;
+    }
+    http_response_code(500);
+    exit(($cfg['debug'] ?? false) ? 'Database error: ' . e($e->getMessage()) : 'Something went wrong. Please try again.');
+}
