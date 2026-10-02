@@ -36,5 +36,9 @@ try {
             'length'     => strlen($pass),
             'whitespace' => $pass !== trim($pass),
         ],
+        'db_user'    => (string) (api_config()['db']['user'] ?? ''),
+        'db_name'    => (string) (api_config()['db']['name'] ?? ''),
+        // when the deployed config last changed (a new secret rewrites this file)
+        'config_updated' => date('Y-m-d H:i:s', (int) filemtime(dirname(__DIR__) . '/admin/config/config.php')),
     ], 500);
 }
