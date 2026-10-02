@@ -14,6 +14,7 @@ import Contact from './components/Contact'
 import Footer from './components/Footer'
 import { CursorGlow, ScrollProgress } from './components/PremiumFx'
 import Preloader from './components/Preloader'
+import WelcomeVoice from './components/WelcomeVoice'
 import { useIsCompactDevice } from './hooks/useIsCompactDevice'
 import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion'
 import { initGA } from './lib/analytics'
@@ -48,6 +49,7 @@ function PortfolioShell() {
         </Suspense>
       )}
       {!reducedMotion && <Preloader initials={profile.initials} />}
+      <WelcomeVoice name={profile.name} />
       <ScrollProgress />
       {!compact && !reducedMotion && <CursorGlow />}
       <Navbar />
