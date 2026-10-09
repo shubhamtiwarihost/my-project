@@ -3,10 +3,10 @@ import { Canvas, useFrame, useThree } from '@react-three/fiber'
 import { Environment, Lightformer, MeshDistortMaterial, MeshReflectorMaterial, Sparkles } from '@react-three/drei'
 import * as THREE from 'three'
 
-const GOLD = '#d4af37'
-const GOLD_LIGHT = '#f3d98b'
-const SILVER = '#c9ced6'
-const WARM_WHITE = '#fff3d6'
+const RED = '#ff2b3d'
+const RED_LIGHT = '#ff6b78'
+const CHROME = '#f2f2f2'
+const WARM_WHITE = '#ffffff'
 
 /** One stop of the corridor per page section, in page order. */
 const SECTIONS = ['home', 'about', 'skills', 'experience', 'projects', 'contact']
@@ -83,41 +83,41 @@ function Spin({ speed = [0, 0.3, 0], children }) {
   return <group ref={ref}>{children}</group>
 }
 
-function Gold(props) {
-  return <meshStandardMaterial color={GOLD} metalness={1} roughness={0.22} envMapIntensity={1.6} {...props} />
+function Red(props) {
+  return <meshStandardMaterial color={RED} metalness={0.75} roughness={0.25} emissive={RED} emissiveIntensity={0.18} envMapIntensity={1.6} {...props} />
 }
 
-function Silver(props) {
-  return <meshStandardMaterial color={SILVER} metalness={0.9} roughness={0.22} emissive="#4a4e55" emissiveIntensity={0.35} envMapIntensity={2} {...props} />
+function Chrome(props) {
+  return <meshStandardMaterial color={CHROME} metalness={0.9} roughness={0.22} emissive="#55585e" emissiveIntensity={0.35} envMapIntensity={2} {...props} />
 }
 
-function Ring({ radius, tube = 0.02, silver, tilt = [0, 0, 0], speed = 0.3 }) {
+function Ring({ radius, tube = 0.02, chrome, tilt = [0, 0, 0], speed = 0.3 }) {
   return (
     <group rotation={tilt}>
       <Spin speed={[0, 0, speed]}>
         <mesh>
           <torusGeometry args={[radius, tube, 16, 160]} />
-          {silver ? <Silver /> : <Gold />}
+          {chrome ? <Chrome /> : <Red />}
         </mesh>
       </Spin>
     </group>
   )
 }
 
-/* Home: liquid-gold core inside silver rings */
+/* Home: liquid-red core inside chrome rings */
 function HomeCore({ lite }) {
   return (
     <>
       <mesh>
         <icosahedronGeometry args={[1, lite ? 8 : 32]} />
         {lite ? (
-          <Gold roughness={0.3} />
+          <Red roughness={0.3} />
         ) : (
-          <MeshDistortMaterial color={GOLD} metalness={1} roughness={0.14} distort={0.32} speed={1.4} envMapIntensity={2} />
+          <MeshDistortMaterial color={RED} metalness={1} roughness={0.14} distort={0.32} speed={1.4} envMapIntensity={2} />
         )}
       </mesh>
-      <Ring radius={1.6} silver tilt={[Math.PI / 2.3, 0.2, 0]} speed={0.35} />
-      <Ring radius={1.95} tube={0.012} silver tilt={[Math.PI / 1.7, -0.5, 0.4]} speed={-0.22} />
+      <Ring radius={1.6} chrome tilt={[Math.PI / 2.3, 0.2, 0]} speed={0.35} />
+      <Ring radius={1.95} tube={0.012} chrome tilt={[Math.PI / 1.7, -0.5, 0.4]} speed={-0.22} />
       {!lite && <Ring radius={2.3} tube={0.008} tilt={[0.35, 0.9, 0]} speed={0.14} />}
     </>
   )
@@ -129,46 +129,46 @@ function Armillary() {
     <Spin speed={[0, 0.25, 0]}>
       <mesh>
         <sphereGeometry args={[0.35, 32, 32]} />
-        <Gold />
+        <Red />
       </mesh>
       <Ring radius={1.2} tube={0.03} tilt={[0, 0, 0]} speed={0} />
-      <Ring radius={1.2} tube={0.03} silver tilt={[Math.PI / 2, 0, 0]} speed={0} />
+      <Ring radius={1.2} tube={0.03} chrome tilt={[Math.PI / 2, 0, 0]} speed={0} />
       <Ring radius={1.2} tube={0.03} tilt={[0, Math.PI / 2, 0]} speed={0} />
-      <Ring radius={1.45} tube={0.02} silver tilt={[Math.PI / 2.6, 0.4, 0]} speed={0.5} />
+      <Ring radius={1.45} tube={0.02} chrome tilt={[Math.PI / 2.6, 0.4, 0]} speed={0.5} />
       <mesh rotation={[0, 0, 0.41]}>
         <cylinderGeometry args={[0.015, 0.015, 3.4, 8]} />
-        <Gold />
+        <Red />
       </mesh>
     </Spin>
   )
 }
 
-/* Skills: silver crystal */
+/* Skills: chrome crystal */
 function Crystal() {
   return (
     <Spin speed={[0.1, 0.4, 0]}>
       <group scale={0.62}>
         <mesh scale={[1, 1.6, 1]}>
         <octahedronGeometry args={[1, 0]} />
-        <Silver flatShading metalness={0.35} roughness={0.3} />
+        <Chrome flatShading metalness={0.35} roughness={0.3} />
       </mesh>
       <mesh scale={[1.25, 2, 1.25]}>
         <octahedronGeometry args={[1, 0]} />
-        <meshBasicMaterial color={GOLD} wireframe transparent opacity={0.35} toneMapped={false} />
+        <meshBasicMaterial color={RED} wireframe transparent opacity={0.35} toneMapped={false} />
       </mesh>
       </group>
     </Spin>
   )
 }
 
-/* Experience: gold slabs rising as a staircase */
+/* Experience: red slabs rising as a staircase */
 function Stairs() {
   return (
     <Spin speed={[0, 0.2, 0]}>
       {[0, 1, 2, 3, 4].map((i) => (
         <mesh key={i} position={[0, -1 + i * 0.5, 0]} rotation={[0, i * 0.45, 0]}>
           <boxGeometry args={[1.5, 0.12, 0.6]} />
-          {i % 2 ? <Silver /> : <Gold />}
+          {i % 2 ? <Chrome /> : <Red />}
         </mesh>
       ))}
     </Spin>
@@ -185,11 +185,11 @@ function Frames() {
           <group key={i} position={[Math.cos(a) * 1.3, 0, Math.sin(a) * 1.3]} rotation={[0, -a + Math.PI / 2, 0]}>
             <mesh>
               <boxGeometry args={[0.9, 0.62, 0.04]} />
-              {i % 2 ? <Silver emissive={SILVER} emissiveIntensity={0.08} /> : <Gold emissive={GOLD} emissiveIntensity={0.12} />}
+              {i % 2 ? <Chrome emissive={CHROME} emissiveIntensity={0.08} /> : <Red emissive={RED} emissiveIntensity={0.12} />}
             </mesh>
             <mesh position={[0, 0, 0.025]}>
               <planeGeometry args={[0.8, 0.52]} />
-              <meshBasicMaterial color={GOLD_LIGHT} transparent opacity={0.1} side={THREE.DoubleSide} toneMapped={false} />
+              <meshBasicMaterial color={RED_LIGHT} transparent opacity={0.1} side={THREE.DoubleSide} toneMapped={false} />
             </mesh>
           </group>
         )
@@ -198,13 +198,13 @@ function Frames() {
   )
 }
 
-/* Contact: gold torus knot */
+/* Contact: red torus knot */
 function Knot({ lite }) {
   return (
     <Spin speed={[0.2, 0.3, 0]}>
       <mesh>
         <torusKnotGeometry args={[0.85, 0.26, lite ? 96 : 220, lite ? 12 : 32]} />
-        <Gold />
+        <Red />
       </mesh>
     </Spin>
   )
@@ -219,15 +219,15 @@ function buildStarfield(count) {
   }
   const positions = new Float32Array(count * 3)
   const colors = new Float32Array(count * 3)
-  const gold = new THREE.Color(GOLD_LIGHT)
-  const silver = new THREE.Color(SILVER)
+  const red = new THREE.Color(RED_LIGHT)
+  const chrome = new THREE.Color(CHROME)
   const white = new THREE.Color(WARM_WHITE)
   for (let i = 0; i < count; i += 1) {
     positions[i * 3] = (rand() - 0.5) * 40
     positions[i * 3 + 1] = rand() * 18 - 3
     positions[i * 3 + 2] = 10 - rand() * DEPTH
     const roll = rand()
-    const c = roll < 0.25 ? gold : roll < 0.5 ? silver : white
+    const c = roll < 0.25 ? red : roll < 0.5 ? chrome : white
     colors[i * 3] = c.r
     colors[i * 3 + 1] = c.g
     colors[i * 3 + 2] = c.b
@@ -247,14 +247,14 @@ function Starfield({ lite }) {
   )
 }
 
-/** Reflective floor with a gold grid running the length of the corridor. */
+/** Reflective floor with a red grid running the length of the corridor. */
 function Floor({ lite }) {
   return (
     <group position={[0, -2.2, 10 - DEPTH / 2]}>
       <mesh rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[60, DEPTH]} />
         {lite ? (
-          <meshStandardMaterial color="#0c0906" metalness={0.8} roughness={0.5} />
+          <meshStandardMaterial color="#080808" metalness={0.8} roughness={0.5} />
         ) : (
           <MeshReflectorMaterial
             resolution={512}
@@ -265,13 +265,13 @@ function Floor({ lite }) {
             depthScale={1}
             minDepthThreshold={0.4}
             maxDepthThreshold={1.4}
-            color="#0c0906"
+            color="#080808"
             metalness={0.6}
           />
         )}
       </mesh>
       <gridHelper
-        args={[DEPTH, DEPTH / 2, GOLD, '#3a2d12']}
+        args={[DEPTH, DEPTH / 2, RED, '#3a0a10']}
         position={[0, 0.01, 0]}
         material-transparent
         material-opacity={lite ? 0.18 : 0.35}
@@ -328,19 +328,19 @@ export default function WorldScene({ lite = false }) {
           camera={{ position: [0, 0.3, 8.5], fov: 45, near: 0.1, far: 120 }}
           gl={{ antialias: !lite, alpha: true, powerPreference: lite ? 'low-power' : 'high-performance' }}
         >
-          <fog attach="fog" args={["#0a0806", 9, 16]} />
+          <fog attach="fog" args={["#050505", 9, 16]} />
           <ambientLight intensity={0.35} />
           <directionalLight position={[4, 6, 3]} intensity={1.8} color={WARM_WHITE} />
           <Environment resolution={lite ? 32 : 128} frames={1}>
-            <color attach="background" args={['#0a0806']} />
-            <Lightformer form="rect" intensity={6} color={GOLD_LIGHT} position={[4, 3, 2]} scale={[5, 5, 1]} />
-            <Lightformer form="rect" intensity={5} color={SILVER} position={[-5, -1, 2]} scale={[5, 6, 1]} />
+            <color attach="background" args={['#050505']} />
+            <Lightformer form="rect" intensity={6} color={RED_LIGHT} position={[4, 3, 2]} scale={[5, 5, 1]} />
+            <Lightformer form="rect" intensity={5} color={CHROME} position={[-5, -1, 2]} scale={[5, 6, 1]} />
             <Lightformer form="ring" intensity={3} color="#ffffff" position={[0, 4, -3]} scale={3} />
           </Environment>
           <Starfield lite={lite} />
           <Floor lite={lite} />
           {!lite && (
-            <Sparkles count={160} scale={[16, 6, DEPTH]} position={[0, 0.5, 10 - DEPTH / 2]} size={2.2} speed={0.3} color={GOLD_LIGHT} opacity={0.7} />
+            <Sparkles count={160} scale={[16, 6, DEPTH]} position={[0, 0.5, 10 - DEPTH / 2]} size={2.2} speed={0.3} color={RED_LIGHT} opacity={0.7} />
           )}
           {objects.map((obj, i) => (
             <Station key={SECTIONS[i]} index={i} lite={lite}>

@@ -18,6 +18,7 @@ import WelcomeVoice from './components/WelcomeVoice'
 import { useIsCompactDevice } from './hooks/useIsCompactDevice'
 import { usePrefersReducedMotion } from './hooks/usePrefersReducedMotion'
 import { useSectionRouting } from './hooks/useSectionRouting'
+import { useDepthScroll } from './hooks/useDepthScroll'
 import { initGA } from './lib/analytics'
 
 const WorldScene = lazy(() => import('./components/WorldScene'))
@@ -27,6 +28,7 @@ function PortfolioShell() {
   const reducedMotion = usePrefersReducedMotion()
   const compact = useIsCompactDevice()
   useSectionRouting()
+  useDepthScroll(!reducedMotion, { pointer: !compact, strength: compact ? 0.45 : 1 })
 
   useEffect(() => {
     initGA()

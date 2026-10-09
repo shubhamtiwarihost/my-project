@@ -1,4 +1,5 @@
 import { useEffect } from 'react'
+import { pageTop } from '../lib/layout'
 
 /** Section id for the current address: "/projects" or the older "/#projects" → "projects". */
 function idFromLocation() {
@@ -16,7 +17,10 @@ function scrollToSection(id, behavior) {
     window.scrollTo({ top: 0, behavior })
     return
   }
-  document.getElementById(id)?.scrollIntoView({ behavior, block: 'start' })
+  const el = document.getElementById(id)
+  if (!el) return
+  const margin = parseFloat(getComputedStyle(el).scrollMarginTop) || 0
+  window.scrollTo({ top: pageTop(el) - margin, behavior })
 }
 
 /**

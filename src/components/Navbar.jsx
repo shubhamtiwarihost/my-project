@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import { pageTop } from '../lib/layout'
 import { useContent } from '../context/ContentProvider'
 import {
   IconGithub,
@@ -43,7 +44,7 @@ export default function Navbar() {
       const sections = navLinks.map((l) => l.href.slice(1))
       for (let i = sections.length - 1; i >= 0; i -= 1) {
         const el = document.getElementById(sections[i])
-        if (el && el.getBoundingClientRect().top <= 120) {
+        if (el && pageTop(el) - window.scrollY <= 120) {
           setActive(sections[i])
           break
         }
