@@ -1,13 +1,19 @@
-import { useEffect, useState } from 'react'
+import { lazy, Suspense, useEffect, useState } from 'react'
 import { useContent } from '../context/ContentProvider'
 import { cvDownloadUrl, submitContact } from '../lib/api'
 import { IconDownload, IconLinkedIn, IconMail, IconPhone, IconSend } from './Icons'
 import Reveal from './ui/Reveal'
 import SectionHead from './ui/SectionHead'
 import Tilt from './ui/Tilt'
+import { useIsCompactDevice } from '../hooks/useIsCompactDevice'
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
+
+const ContactGlobe = lazy(() => import('./three/Scenes').then((m) => ({ default: m.ContactGlobe })))
 
 export default function Contact() {
   const { contactCopy, profile } = useContent()
+  const compact = useIsCompactDevice()
+  const reducedMotion = usePrefersReducedMotion()
   const [form, setForm] = useState({ name: '', email: '', subject: '', phone: '', message: '' })
   const [sent, setSent] = useState(false)
   const [submitting, setSubmitting] = useState(false)
@@ -38,7 +44,14 @@ export default function Contact() {
 
   return (
     <section id="contact" className="section p-section">
-      <div className="container">
+      <div className="container p-contact-wrap">
+        {!reducedMotion && (
+          <div className="p-contact__globe" aria-hidden="true">
+            <Suspense fallback={null}>
+              <ContactGlobe lite={compact} />
+            </Suspense>
+          </div>
+        )}
         <SectionHead
           index="05"
           eyebrow="Connect"

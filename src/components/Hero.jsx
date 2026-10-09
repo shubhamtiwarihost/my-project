@@ -3,6 +3,10 @@ import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
 import { IconDownload, IconGithub, IconLinkedIn, IconMail } from './Icons'
 import { trackCvDownload } from '../lib/analytics'
 import { cvDownloadUrl } from '../lib/api'
+import { lazy, Suspense } from 'react'
+import { useIsCompactDevice } from '../hooks/useIsCompactDevice'
+
+const HeroWorkstation = lazy(() => import('./three/Scenes').then((m) => ({ default: m.HeroWorkstation })))
 
 function splitList(line = '') {
   return line.split(/[•·|,]/).map((s) => s.trim()).filter(Boolean)
@@ -11,6 +15,7 @@ function splitList(line = '') {
 export default function Hero() {
   const { profile, alsoUsed } = useContent()
   const reducedMotion = usePrefersReducedMotion()
+  const compact = useIsCompactDevice()
 
   const [firstName, ...rest] = (profile.name || '').split(' ')
   const lastName = rest.join(' ')
@@ -73,8 +78,13 @@ export default function Hero() {
           </div>
         </div>
 
-        {/* Holographic chips floating around the 3D core */}
+        {/* Interactive 3D workstation with stat chips floating around it */}
         <div className="p-hero__orbit" aria-hidden="true">
+          {!reducedMotion && (
+            <Suspense fallback={null}>
+              <HeroWorkstation lite={compact} />
+            </Suspense>
+          )}
           {chips.map((chip, i) => (
             <div key={chip.label} className={`p-holo p-holo--${i + 1}`}>
               <strong>{chip.num}</strong>

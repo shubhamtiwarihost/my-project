@@ -1,10 +1,13 @@
-import { useMemo } from 'react'
+import { lazy, Suspense, useMemo } from 'react'
 import { useContent } from '../context/ContentProvider'
 import { useIsCompactDevice } from '../hooks/useIsCompactDevice'
 import Reveal from './ui/Reveal'
 import SectionHead from './ui/SectionHead'
 import SkillSphere from './ui/SkillSphere'
 import Tilt from './ui/Tilt'
+import { usePrefersReducedMotion } from '../hooks/usePrefersReducedMotion'
+
+const TechBalls = lazy(() => import('./three/Scenes').then((m) => ({ default: m.TechBalls })))
 
 /** "AWS (EC2, S3, RDS, CloudWatch)" → "AWS" so labels fit on the globe. */
 function shortLabel(skill) {
@@ -14,6 +17,7 @@ function shortLabel(skill) {
 export default function Skills() {
   const { skillGroups, skillsCopy } = useContent()
   const compact = useIsCompactDevice()
+  const reducedMotion = usePrefersReducedMotion()
 
   const globeSkills = useMemo(() => {
     // Take skills round-robin across groups so every area is represented
@@ -31,6 +35,12 @@ export default function Skills() {
     <section id="skills" className="section p-section">
       <div className="container">
         <SectionHead index="02" eyebrow="Skills" title={skillsCopy.title} subtitle={skillsCopy.subtitle} />
+
+        {!reducedMotion && (
+          <Suspense fallback={null}>
+            <TechBalls skills={globeSkills.slice(0, compact ? 8 : 16)} lite={compact} />
+          </Suspense>
+        )}
 
         <div className="p-skills">
           <Reveal className="p-skills__globe">

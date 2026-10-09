@@ -1,6 +1,6 @@
 import { Component, useEffect, useMemo, useRef } from 'react'
 import { Canvas, useFrame, useThree } from '@react-three/fiber'
-import { Environment, Lightformer, MeshDistortMaterial, MeshReflectorMaterial, Sparkles } from '@react-three/drei'
+import { Environment, Lightformer, MeshReflectorMaterial, Sparkles } from '@react-three/drei'
 import * as THREE from 'three'
 
 const RED = '#ff2b3d'
@@ -104,25 +104,6 @@ function Ring({ radius, tube = 0.02, chrome, tilt = [0, 0, 0], speed = 0.3 }) {
   )
 }
 
-/* Home: liquid-red core inside chrome rings */
-function HomeCore({ lite }) {
-  return (
-    <>
-      <mesh>
-        <icosahedronGeometry args={[1, lite ? 8 : 32]} />
-        {lite ? (
-          <Red roughness={0.3} />
-        ) : (
-          <MeshDistortMaterial color={RED} metalness={1} roughness={0.14} distort={0.32} speed={1.4} envMapIntensity={2} />
-        )}
-      </mesh>
-      <Ring radius={1.6} chrome tilt={[Math.PI / 2.3, 0.2, 0]} speed={0.35} />
-      <Ring radius={1.95} tube={0.012} chrome tilt={[Math.PI / 1.7, -0.5, 0.4]} speed={-0.22} />
-      {!lite && <Ring radius={2.3} tube={0.008} tilt={[0.35, 0.9, 0]} speed={0.14} />}
-    </>
-  )
-}
-
 /* About: armillary sphere */
 function Armillary() {
   return (
@@ -139,24 +120,6 @@ function Armillary() {
         <cylinderGeometry args={[0.015, 0.015, 3.4, 8]} />
         <Red />
       </mesh>
-    </Spin>
-  )
-}
-
-/* Skills: chrome crystal */
-function Crystal() {
-  return (
-    <Spin speed={[0.1, 0.4, 0]}>
-      <group scale={0.62}>
-        <mesh scale={[1, 1.6, 1]}>
-        <octahedronGeometry args={[1, 0]} />
-        <Chrome flatShading metalness={0.35} roughness={0.3} />
-      </mesh>
-      <mesh scale={[1.25, 2, 1.25]}>
-        <octahedronGeometry args={[1, 0]} />
-        <meshBasicMaterial color={RED} wireframe transparent opacity={0.35} toneMapped={false} />
-      </mesh>
-      </group>
     </Spin>
   )
 }
@@ -194,18 +157,6 @@ function Frames() {
           </group>
         )
       })}
-    </Spin>
-  )
-}
-
-/* Contact: red torus knot */
-function Knot({ lite }) {
-  return (
-    <Spin speed={[0.2, 0.3, 0]}>
-      <mesh>
-        <torusKnotGeometry args={[0.85, 0.26, lite ? 96 : 220, lite ? 12 : 32]} />
-        <Red />
-      </mesh>
     </Spin>
   )
 }
@@ -312,12 +263,12 @@ class SceneBoundary extends Component {
 export default function WorldScene({ lite = false }) {
   const input = useWorldInput()
   const objects = [
-    <HomeCore key="home" lite={lite} />,
+    null, // Home has its own interactive workstation in the hero
     <Armillary key="about" />,
-    <Crystal key="skills" />,
+    null, // Skills has its own tech balls
     <Stairs key="experience" />,
     <Frames key="projects" />,
-    <Knot key="contact" lite={lite} />,
+    null, // Contact has its own globe
   ]
 
   return (
@@ -342,7 +293,7 @@ export default function WorldScene({ lite = false }) {
           {!lite && (
             <Sparkles count={160} scale={[16, 6, DEPTH]} position={[0, 0.5, 10 - DEPTH / 2]} size={2.2} speed={0.3} color={RED_LIGHT} opacity={0.7} />
           )}
-          {objects.map((obj, i) => (
+          {objects.map((obj, i) => obj && (
             <Station key={SECTIONS[i]} index={i} lite={lite}>
               {obj}
             </Station>
