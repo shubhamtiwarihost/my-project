@@ -1,5 +1,5 @@
 /* Minimal service worker so the site can install like an app */
-const CACHE = 'shubham-portfolio-v2'
+const CACHE = 'shubham-portfolio-v3'
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
